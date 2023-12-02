@@ -1,12 +1,6 @@
-interface Activity {
-    name: string
-    description?: string
-    location?: string
-}
-
-interface TripDay {
+export interface TripDay {
     date: Date,
-    activities: Activity[]
+    locations: string[]
 }
 
 export class Trip {
@@ -25,7 +19,7 @@ export class Trip {
         const currentDate = new Date(this.startDate)
 
         while (currentDate <= this.endDate) {
-            itinerary.push({ date: new Date(currentDate), activities: [] })
+            itinerary.push({ date: new Date(currentDate), locations: [] })
 
             currentDate.setDate(currentDate.getDate() + 1)
         }
