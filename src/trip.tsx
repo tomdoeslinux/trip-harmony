@@ -3,13 +3,13 @@ interface TripDay {
 }
 
 export class Trip {
-    private readonly startDate: Date
-    private readonly endDate: Date
     private readonly _itinerary: TripDay[]
 
-    constructor(startDate: Date, endDate: Date) {
-        this.startDate = startDate
-        this.endDate = endDate
+    constructor(
+        private readonly location: string,
+        private readonly startDate: Date,
+        private readonly endDate: Date
+    ) {
         this._itinerary = this.generateItinerary()
     }
 

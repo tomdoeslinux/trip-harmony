@@ -7,7 +7,7 @@ function createTrip(): Trip {
     const endDate = new Date()
     endDate.setDate(currentDate.getDate() + 3)
 
-    return new Trip(currentDate, endDate)
+    return new Trip('North Dakota', currentDate, endDate)
 }
 
 function App() {
