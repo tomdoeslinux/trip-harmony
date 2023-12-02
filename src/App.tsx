@@ -1,5 +1,5 @@
 import './App.css'
-import { Grid, GridItem, Heading, Text } from '@chakra-ui/react'
+import { Grid, GridItem, Heading } from '@chakra-ui/react'
 import { Trip } from './trip'
 
 function createTrip(): Trip {
