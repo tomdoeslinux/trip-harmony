@@ -1,4 +1,4 @@
-export interface TripDay {
+interface TripDay {
     date: Date
 }
 
