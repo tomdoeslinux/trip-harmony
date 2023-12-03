@@ -4,14 +4,14 @@ export interface TripDay {
 }
 
 export class Trip {
-    private readonly _itinerary: TripDay[]
+    readonly itinerary: TripDay[]
 
     constructor(
         private readonly location: string,
         private readonly startDate: Date,
         private readonly endDate: Date
     ) {
-        this._itinerary = this.generateItinerary()
+        this.itinerary = this.generateItinerary()
     }
 
     private generateItinerary(): TripDay[] {
@@ -25,9 +25,5 @@ export class Trip {
         }
 
         return itinerary
-    }
-
-    get itinerary(): TripDay[] {
-        return this._itinerary
     }
 }

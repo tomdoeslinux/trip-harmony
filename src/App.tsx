@@ -38,9 +38,7 @@ function AddLocation() {
 
             setSuggestedPlaces(places)
             setIsLoadingSuggestedPlaces(false)
-        } else {
-            setSuggestedPlaces([])
-        }
+        } 
     }
 
     const debouncedFetchSuggestedPlaces = useCallback(debounce(fetchSuggestedPlaces, 300), [])
@@ -57,7 +55,6 @@ function AddLocation() {
         <Autocomplete 
             suggestions={suggestedPlaces} 
             placeholder='Add Location' 
-            onOutsideClick={() => setSuggestedPlaces([])}
             isLoading={isLoadingSuggestedPlaces}
             {...register('locationSearchInput')} 
         />
