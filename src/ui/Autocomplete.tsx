@@ -15,7 +15,7 @@ const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(({ suggesti
     useImperativeHandle(ref, () => inputRef.current!, [])
 
     useEffect(() => {
-        function documentClickHandler(e: MouseEvent) {
+        function documentMouseDownHandler(e: MouseEvent) {
             if (!(inputRef.current?.contains(e.target as HTMLElement) || suggestionsRef.current?.contains(e.target as HTMLElement))) {
                 setSuggestionsVisible(false)
             }
@@ -26,13 +26,13 @@ const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(({ suggesti
         }
 
         if (suggestions.length === 0) {
-            document.removeEventListener('click', documentClickHandler)
+            document.removeEventListener('mousedown', documentMouseDownHandler)
         } else {
-            document.addEventListener('click', documentClickHandler)
+            document.addEventListener('mousedown', documentMouseDownHandler)
         }
 
         return () => {
-            document.removeEventListener('click', documentClickHandler)
+            document.removeEventListener('mousedown', documentMouseDownHandler)
         }
     }, [JSON.stringify(suggestions)])
 
