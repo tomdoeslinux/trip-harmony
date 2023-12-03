@@ -12,14 +12,6 @@ const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(({ suggesti
     const inputRef = useRef<HTMLInputElement>(null)
     const suggestionsRef = useRef<HTMLDivElement>(null)
 
-    useEffect(() => {
-        if (inputRef.current?.value.length === 0) {
-            setSuggestionsVisible(false)
-        } else {
-            setSuggestionsVisible(true)
-        }
-    }, [inputRef.current?.value])
-
     useImperativeHandle(ref, () => inputRef.current!, [])
 
     useEffect(() => {

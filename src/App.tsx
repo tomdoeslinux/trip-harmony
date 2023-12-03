@@ -24,7 +24,7 @@ function AddLocation() {
     const locationSearchInput = watch('locationSearchInput')
 
     async function fetchSuggestedPlaces(searchInput: string) {
-        if (searchInput.trim().length > 0) {
+        if (searchInput?.trim().length > 0) {
             setIsLoadingSuggestedPlaces(true)
 
             const url: URL = buildUrl('https://nominatim.openstreetmap.org/search', { q: searchInput, format: 'json' })
@@ -45,6 +45,11 @@ function AddLocation() {
 
     useEffect(() => {
         debouncedFetchSuggestedPlaces(locationSearchInput)
+
+        if (locationSearchInput?.trim().length === 0) {
+            setSuggestedPlaces([])
+            debouncedFetchSuggestedPlaces.cancel()
+        }
 
         return () => {
             debouncedFetchSuggestedPlaces.cancel()
