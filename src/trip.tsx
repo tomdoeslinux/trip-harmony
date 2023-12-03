@@ -1,4 +1,5 @@
 export interface Location {
+    id: string
     name: string
     lat: number
     lon: number
@@ -34,6 +35,15 @@ export class Trip {
 
         if (tripDay) {
             tripDay.locations.push(location)
+        }
+    }
+
+    deleteLocationById(locationId: string) {
+        for (const tripDay of this.itinerary) {
+            if (tripDay.locations.find((location) => location.id === locationId)) {
+                tripDay.locations = tripDay.locations.filter((location) => location.id !== locationId)
+                break
+            } 
         }
     }
 }

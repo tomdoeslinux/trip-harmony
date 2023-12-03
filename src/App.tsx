@@ -1,10 +1,10 @@
 import './App.css'
 import { Grid, GridItem, Heading, Flex, IconButton, Box, } from '@chakra-ui/react'
 import { Location, Trip, TripDay } from './trip'
-import { MdArrowForwardIos, MdCheck, MdLocationPin } from 'react-icons/md'
+import { MdArrowForwardIos, MdCheck, MdDelete, MdLocationPin } from 'react-icons/md'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import Autocomplete from './ui/Autocomplete'
-import { buildUrl } from './util'
+import { buildUrl, generateId } from './util'
 import { TileLayer, Marker, Popup, MapContainer } from 'react-leaflet'
 import { useForm } from 'react-hook-form'
 import debounce from 'lodash.debounce'
@@ -40,6 +40,7 @@ function AddLocation(props: AddLocationProps) {
             const data: any[] = await response.json()
 
             const locations: Location[] = data.map((item) => ({ 
+                id: generateId(),
                 name: item.display_name, 
                 lat: Number(item.lat), 
                 lon: Number(item.lon) 
@@ -94,9 +95,41 @@ function AddLocation(props: AddLocationProps) {
     )
 }
 
+interface LocationComponentProps {
+    location: Location
+    onDeleteLocation: (locationId: string) => void
+}
+
+function LocationComponent(props: LocationComponentProps) {
+    return (
+        <Flex
+            alignItems='center'
+            gap='8px'
+            padding='8px'
+            shadow='md'
+        >
+            <Box background='#A7C7E7' padding='12px' borderRadius='999px' color='darkblue'>
+                <MdLocationPin size={18} />
+            </Box>
+
+            {props.location.name}
+
+            <IconButton 
+                marginLeft='auto' 
+                aria-label='Delete' 
+                variant='ghost'
+                onClick={() => props.onDeleteLocation(props.location.id)}
+            >
+                <MdDelete />
+            </IconButton>
+        </Flex>
+    )
+}
+
 interface TripDayComponentProps {
     tripDay: TripDay
     onAddLocation: (location: Location) => void
+    onDeleteLocation: (locationId: string) => void
 }
 
 function TripDayComponent(props: TripDayComponentProps) {
@@ -123,16 +156,11 @@ function TripDayComponent(props: TripDayComponentProps) {
                     <AddLocation onAddLocation={props.onAddLocation} />
 
                     {props.tripDay.locations.map((location, index) => (
-                        <Flex
-                            alignItems='center'
-                            gap='8px' 
-                            padding='8px' 
-                            shadow='md' 
-                            key={index}
-                        >
-                            <MdLocationPin />
-                            {location.name}
-                        </Flex>
+                        <LocationComponent 
+                            key={index} 
+                            location={location}
+                            onDeleteLocation={props.onDeleteLocation}
+                        />
                     ))}
                 </Flex>
             )}
@@ -185,6 +213,10 @@ function App() {
                     <TripDayComponent 
                         key={index} 
                         tripDay={tripDay}
+                        onDeleteLocation={(locationId: string) => {
+                            trip.deleteLocationById(locationId)
+                            setItinerary([...trip.itinerary])
+                        }}
                         onAddLocation={(location: Location) => {
                             trip.addLocationToDay(tripDay.date, location)
                             setItinerary([...trip.itinerary])
