@@ -1,16 +1,18 @@
+export interface Location {
+    name: string
+    lat: number
+    lon: number
+}
+
 export interface TripDay {
     date: Date,
-    locations: string[]
+    locations: Location[]
 }
 
 export class Trip {
     readonly itinerary: TripDay[]
 
-    constructor(
-        private readonly location: string,
-        private readonly startDate: Date,
-        private readonly endDate: Date
-    ) {
+    constructor(private readonly startDate: Date, private readonly endDate: Date) {
         this.itinerary = this.generateItinerary()
     }
 
@@ -25,5 +27,13 @@ export class Trip {
         }
 
         return itinerary
+    }
+
+    addLocationToDay(date: Date, location: Location) {
+        const tripDay = this.itinerary.find((tripDay) => tripDay.date.getTime() === date.getTime())
+
+        if (tripDay) {
+            tripDay.locations.push(location)
+        }
     }
 }

@@ -2,11 +2,12 @@ import { Button, Text, Flex, Input, InputGroup, InputProps, InputRightElement, S
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react"
 
 type AutocompleteProps = { 
-    suggestions: string[], 
+    suggestions: string[],
+    onSuggestionClick: (index: number) => void, 
     isLoading: boolean 
 } & InputProps
 
-const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(({ suggestions, isLoading, ...props }, ref) => {
+const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(({ suggestions, isLoading, onSuggestionClick, ...props }, ref) => {
     const [suggestionsVisible, setSuggestionsVisible] = useState(true)
     
     const inputRef = useRef<HTMLInputElement>(null)
@@ -68,6 +69,10 @@ const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(({ suggesti
                                 variant='ghost'
                                 borderRadius='0px'
                                 fontWeight='normal'
+                                onClick={() => {
+                                    onSuggestionClick(index)
+                                    setSuggestionsVisible(false)
+                                }}
                                 key={index}
                             >
                                 <Text
