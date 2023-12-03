@@ -1,7 +1,7 @@
 import './App.css'
 import { Grid, GridItem, Heading, Flex, IconButton, Box, } from '@chakra-ui/react'
 import { Trip, TripDay } from './trip'
-import { MdAdd, MdArrowForwardIos } from 'react-icons/md'
+import { MdArrowForwardIos } from 'react-icons/md'
 import { useCallback, useEffect, useState } from 'react'
 import Autocomplete from './ui/Autocomplete'
 import { buildUrl } from './util'
@@ -20,25 +20,33 @@ function createTrip(): Trip {
 function AddLocation() {
     const { register, watch } = useForm<{ locationSearchInput: string }>()
     const [suggestedPlaces, setSuggestedPlaces] = useState<string[]>([])
+    const [isLoadingSuggestedPlaces, setIsLoadingSuggestedPlaces] = useState(false)
     const locationSearchInput = watch('locationSearchInput')
 
-    async function fetchSuggestedPlaces() {
-        const url: URL = buildUrl('https://nominatim.openstreetmap.org/search', { q: locationSearchInput, format: 'json' })
+    async function fetchSuggestedPlaces(searchInput: string) {
+        if (searchInput.trim().length > 0) {
+            setIsLoadingSuggestedPlaces(true)
 
-        const response = await fetch(url, { 
-            headers: { 'User-Agent': 'todoescode@gmail.com' } 
-        })
-        const data: any[] = await response.json()
+            const url: URL = buildUrl('https://nominatim.openstreetmap.org/search', { q: searchInput, format: 'json' })
 
-        const places: string[] = data.map((item) => item.display_name)
+            const response = await fetch(url, { 
+                headers: { 'User-Agent': 'todoescode@gmail.com' } 
+            })
+            const data: any[] = await response.json()
 
-        setSuggestedPlaces(places)
+            const places: string[] = data.map((item) => item.display_name)
+
+            setSuggestedPlaces(places)
+            setIsLoadingSuggestedPlaces(false)
+        } else {
+            setSuggestedPlaces([])
+        }
     }
 
     const debouncedFetchSuggestedPlaces = useCallback(debounce(fetchSuggestedPlaces, 300), [])
 
     useEffect(() => {
-        debouncedFetchSuggestedPlaces()
+        debouncedFetchSuggestedPlaces(locationSearchInput)
 
         return () => {
             debouncedFetchSuggestedPlaces.cancel()
@@ -50,6 +58,7 @@ function AddLocation() {
             suggestions={suggestedPlaces} 
             placeholder='Add Location' 
             onOutsideClick={() => setSuggestedPlaces([])}
+            isLoading={isLoadingSuggestedPlaces}
             {...register('locationSearchInput')} 
         />
     )

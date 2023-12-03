@@ -1,9 +1,13 @@
-import { Button, Flex, Input, InputProps } from "@chakra-ui/react"
+import { Button, Flex, Input, InputGroup, InputProps, InputRightElement, Spinner } from "@chakra-ui/react"
 import { forwardRef, useEffect, useImperativeHandle, useRef } from "react"
 
-type AutocompleteProps = { suggestions: string[], onOutsideClick: () => void } & InputProps
+type AutocompleteProps = { 
+    suggestions: string[], 
+    onOutsideClick: () => void,
+    isLoading: boolean
+} & InputProps
 
-const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(({ suggestions, onOutsideClick, ...props }, ref) => {
+const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(({ suggestions, onOutsideClick, isLoading, ...props }, ref) => {
     const inputRef = useRef<HTMLInputElement>(null)
     const suggestionsRef = useRef<HTMLDivElement>(null)
 
@@ -25,11 +29,19 @@ const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(({ suggesti
         return () => {
             document.removeEventListener('click', documentClickHandler)
         }
-    }, [])
+    }, [JSON.stringify(suggestions)])
 
     return (
         <Flex flexDirection='column' width='100%' gap='8px'>
-            <Input {...props} ref={inputRef} />
+            <InputGroup>
+                <Input {...props} ref={inputRef} />
+
+                {isLoading && (
+                    <InputRightElement>
+                        <Spinner size='sm' />
+                    </InputRightElement>
+                )}
+            </InputGroup>
 
             {suggestions.length > 0 && (
                 <Flex position='relative' zIndex='999' ref={suggestionsRef}>
