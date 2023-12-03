@@ -1,4 +1,4 @@
-import { Button, Flex, Input, InputGroup, InputProps, InputRightElement, Spinner } from "@chakra-ui/react"
+import { Button, Text, Flex, Input, InputGroup, InputProps, InputRightElement, Spinner } from "@chakra-ui/react"
 import { forwardRef, useEffect, useImperativeHandle, useRef } from "react"
 
 type AutocompleteProps = { 
@@ -44,8 +44,9 @@ const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(({ suggesti
             </InputGroup>
 
             {suggestions.length > 0 && (
-                <Flex position='relative' zIndex='999' ref={suggestionsRef}>
+                <Flex maxWidth='100%' position='relative' zIndex='999' ref={suggestionsRef}>
                     <Flex 
+                        width='100%'
                         flexDirection='column' 
                         border='1px solid'
                         borderColor='gray.200'
@@ -63,7 +64,15 @@ const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(({ suggesti
                                 borderRadius='0px'
                                 fontWeight='normal'
                                 key={index}
-                            >{suggestion}</Button>
+                            >
+                                <Text
+                                    textOverflow='ellipsis'
+                                    overflow='hidden'
+                                    whiteSpace='nowrap'
+                                >
+                                    {suggestion}
+                                </Text>
+                            </Button>
                         ))}
                     </Flex>
                 </Flex>
