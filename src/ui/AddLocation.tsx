@@ -1,4 +1,4 @@
-import { Flex, IconButton } from "@chakra-ui/react"
+import { Flex, IconButton, InputProps } from "@chakra-ui/react"
 import debounce from "lodash.debounce"
 import { useState, useCallback, useEffect } from "react"
 import { useForm } from "react-hook-form"
@@ -7,11 +7,12 @@ import { buildUrl, generateId } from "src/util"
 import { Location } from 'src/trip'
 import Autocomplete from "src/ui/Autocomplete"
 
-interface AddLocationProps {
+type AddLocationProps ={
     onAddLocation: (location: Location) => void
-}
+    showDoneButton?: boolean
+} & InputProps
 
-export default function AddLocation(props: AddLocationProps) {
+export default function AddLocation({ onAddLocation, showDoneButton, ...props }: AddLocationProps) {
     const { register, watch, setValue } = useForm<{ locationSearchInput: string }>()
     const [suggestedLocations, setSuggestedLocations] = useState<Location[]>([])
     const [isLoadingSuggestedLocations, setIsLoadingSuggestedLocations] = useState(false)
@@ -60,27 +61,35 @@ export default function AddLocation(props: AddLocationProps) {
         <Flex gap='8px'>
             <Autocomplete
                 suggestions={suggestedLocations.map((location) => location.name)}
-                onSuggestionClick={(index: number) => {
+                onSuggestionClick={(index) => {
                     setValue('locationSearchInput', suggestedLocations[index].name)
-                    setSelectedLocation(suggestedLocations[index])
+                    
+                    if (showDoneButton) {
+                        setSelectedLocation(suggestedLocations[index])
+                    } else {
+                        onAddLocation(suggestedLocations[index])
+                    }
                 }}
                 placeholder='Add Location'
                 isLoading={isLoadingSuggestedLocations}
                 {...register('locationSearchInput')}
+                {...props}
             />
 
-            <IconButton
-                aria-label='Add location'
-                onClick={() => {
-                    if (selectedLocation) {
-                        setValue('locationSearchInput', '')
-                        setSuggestedLocations([])
-                        props.onAddLocation(selectedLocation)
-                    }
-                }}
-            >
-                <MdCheck />
-            </IconButton>
+            {showDoneButton && (
+                <IconButton
+                    aria-label='Add location'
+                    onClick={() => {
+                        if (selectedLocation) {
+                            setValue('locationSearchInput', '')
+                            setSuggestedLocations([])
+                            onAddLocation(selectedLocation)
+                        }
+                    }}
+                >
+                    <MdCheck />
+                </IconButton>
+            )}
         </Flex>
     )
 }

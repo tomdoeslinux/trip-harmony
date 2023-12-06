@@ -1,19 +1,16 @@
-import { Grid, GridItem, } from '@chakra-ui/react'
+import { Box, Grid, GridItem, Heading, } from '@chakra-ui/react'
 import { useMemo, useState } from 'react'
-import { Trip, Location } from '../../trip'
+import { Trip, Location, TripCtor } from '../../trip'
 import TripDayComponent from './components/TripDay'
 import Map from './components/Map'
+import { TripDB } from 'src/database'
 
-function createTrip(): Trip {
-    const currentDate = new Date()
-    const endDate = new Date()
-    endDate.setDate(currentDate.getDate() + 3)
-
-    return new Trip(currentDate, endDate)
+interface TripPageProps {
+    tripId: string
 }
 
-export default function TripPage() {
-    const trip: Trip = useMemo(() => createTrip(), [])
+export default function TripPage(props: TripPageProps) {
+    const trip: Trip = useMemo(() => TripDB.trips.find((trip) => trip.id === props.tripId)!, [])
     const [itinerary, setItinerary] = useState(trip.itinerary)
 
     return (
@@ -25,6 +22,7 @@ export default function TripPage() {
                 display='flex'
                 flexDirection='column'
             >
+                <Heading as='h1'>{trip.name}</Heading>
                 {itinerary.map((tripDay, index) => (
                     <TripDayComponent
                         key={index}
@@ -41,8 +39,10 @@ export default function TripPage() {
                 ))}
             </GridItem>
 
-            <GridItem gridColumn={2} background='gray'>
-                <Map locations={itinerary.map((itinerary) => itinerary.locations).flat()} />
+            <GridItem position='relative' gridColumn={2} background='gray'>
+                <Box position='fixed' width='100%' height='100%'>
+                    <Map startingLocation={trip.location} locations={itinerary.map((itinerary) => itinerary.locations).flat()} />
+                </Box>
             </GridItem>
         </Grid>
     )

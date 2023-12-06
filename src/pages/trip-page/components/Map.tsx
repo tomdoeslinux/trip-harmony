@@ -2,6 +2,7 @@ import { TileLayer, Marker, Popup, MapContainer } from "react-leaflet"
 import { Location } from "src/trip"
 
 interface MapProps {
+    startingLocation: Location
     locations: Location[]
 }
 
@@ -9,7 +10,7 @@ export default function Map(props: MapProps) {
     return (
         <MapContainer
             style={{ height: '100%', width: '100%' }}
-            center={[0, 0]}
+            center={[props.startingLocation.lat, props.startingLocation.lon]}
             zoom={13}
             scrollWheelZoom={true}
         >

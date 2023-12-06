@@ -1,3 +1,5 @@
+import { generateId } from "src/util"
+
 export interface Location {
     id: string
     name: string
@@ -10,10 +12,29 @@ export interface TripDay {
     locations: Location[]
 }
 
-export class Trip {
-    readonly itinerary: TripDay[]
+export interface TripCtor {
+    id: string
+    name: string
+    location: Location
+    startDate: Date
+    endDate: Date
+}
 
-    constructor(private readonly startDate: Date, private readonly endDate: Date) {
+export class Trip {
+    readonly id: string
+    readonly itinerary: TripDay[]
+    readonly name: string
+    readonly location: Location
+    private readonly startDate: Date
+    private readonly endDate: Date
+
+    constructor(ctor: TripCtor) {
+        this.id = ctor.id
+        this.name = ctor.name;
+        this.location = ctor.location;
+        this.startDate = ctor.startDate;
+        this.endDate = ctor.endDate;
+
         this.itinerary = this.generateItinerary()
     }
 

@@ -1,31 +1,11 @@
 import { Box, Button, Flex, Grid, Heading, useMediaQuery } from "@chakra-ui/react";
+import { useState } from "react";
 import { MdAdd } from "react-icons/md";
-import { Trip } from "src/trip";
-
-interface TripCardProps {
-    trip?: Trip
-}
-
-function TripCard(props: TripCardProps) {
-    return (
-        <Flex 
-            borderRadius='8px' 
-            flexDirection='column' 
-            background='white' 
-            minHeight='300px'
-            border='1px solid rgb(218, 220, 224)'
-            _hover={{ shadow: 'md' }}
-            cursor='pointer'
-            transition='box-shadow 0.1s'
-            minWidth='0px'
-            _active={{ border: '1px solid darkblue' }}
-        >
-            <Box marginTop='auto' fontSize='lg' padding='16px'>
-                Trip Name
-            </Box>
-        </Flex>
-    )
-}
+import { TripDB } from "src/database";
+import NewTripDialog from "src/pages/home-page/components/NewTripDialog";
+import TripCard from "src/pages/home-page/components/TripCard";
+import { TripCtor } from "src/trip";
+import { useLocation } from "wouter";
 
 function Header() {
     return (
@@ -50,6 +30,14 @@ const PAGE_WIDTH = '1280px'
 
 export default function HomePage() {
     const [isWide] = useMediaQuery(`(min-width: ${PAGE_WIDTH}))`)
+    const [showNewTripDialog, setShowNewTripDialog] = useState(false)
+    const [_, setLocation] = useLocation()
+
+    function createTrip(tripCtor: TripCtor) {
+        setShowNewTripDialog(false)
+        TripDB.addTrip(tripCtor)
+        setLocation(`/trip/${TripDB.trips[TripDB.trips.length - 1].id}`)
+    }
 
     return (
         <Flex
@@ -57,6 +45,7 @@ export default function HomePage() {
             background='gray.100' 
             alignItems='center'
             overflowY='hidden'
+            minHeight='100vh'
         >
             <Header />
 
@@ -79,15 +68,22 @@ export default function HomePage() {
                         size='sm' 
                         iconSpacing='6px'
                         leftIcon={<MdAdd size={20} />}
+                        onClick={() => setShowNewTripDialog(true)}
                     >Add New</Button>
                 </Flex>
 
                 <Grid width='100%' gridTemplateColumns={{ base: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)', lg: 'repeat(4, 1fr)' }} gap='8px'>
-                    {[...Array(21)].map((_, index) => (
-                        <TripCard key={index} />
+                    {TripDB.trips.map((trip, index) => (
+                        <TripCard 
+                            trip={trip} 
+                            key={index} 
+                            onClick={(tripId) => setLocation(`/trip/${tripId}`)}
+                        />
                     ))}
                 </Grid>
             </Flex>
+
+            {showNewTripDialog && <NewTripDialog onClose={() => setShowNewTripDialog(false)} onCreateTrip={createTrip} />}
         </Flex>
     )
 }

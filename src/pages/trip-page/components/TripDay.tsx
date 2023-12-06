@@ -1,7 +1,7 @@
 import { Flex, Box, IconButton, Heading } from "@chakra-ui/react"
 import { useState } from "react"
 import { MdArrowForwardIos } from "react-icons/md"
-import AddLocation from "./AddLocation"
+import AddLocation from "../../../ui/AddLocation"
 import LocationComponent from "./LocationComponent"
 import { Location, TripDay } from "src/trip"
 
@@ -32,7 +32,7 @@ export default function TripDayComponent(props: TripDayComponentProps) {
 
             {isExpanded && (
                 <Flex flexDirection='column' gap='8px'>
-                    <AddLocation onAddLocation={props.onAddLocation} />
+                    <AddLocation onAddLocation={props.onAddLocation} showDoneButton={true} />
 
                     {props.tripDay.locations.map((location, index) => (
                         <LocationComponent
