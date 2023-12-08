@@ -5,7 +5,8 @@ import './index.css'
 import { ChakraProvider, extendTheme } from '@chakra-ui/react'
 import { Route } from 'wouter'
 import TripPage from 'src/pages/trip-page/TripPage.tsx'
-import { Trip, TripCtor } from 'src/trip.tsx'
+import RegisterPage from 'src/pages/register-page/RegisterPage.tsx'
+import LoginPage from 'src/pages/login-page/LoginPage.tsx'
 
 const theme = extendTheme({
     fonts: {
@@ -19,7 +20,9 @@ function Router() {
     return (
         <>
             <Route path='/' component={App} />
-            <Route path='/trip/:id'>
+            <Route path='/login' component={LoginPage} />
+            <Route path='/register' component={RegisterPage} />
+            <Route path='/trips/:id'>
                 {params => <TripPage tripId={params.id} />}
             </Route>
         </>

@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "user")
 public class User {
@@ -25,10 +26,10 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "username", unique = true, nullable = false)
+    @Column(name = "username", nullable = false)
     private String username;
 
-    @Column(name = "email", unique = true, nullable = false)
+    @Column(name = "email", nullable = false)
     private String email;
 
     @Column(name = "password", nullable = false)
@@ -37,8 +38,6 @@ public class User {
     @Column(name = "created_at")
     @CreationTimestamp
     private LocalDateTime memberSince;
-
-    public User() { }
 
     public User(String username, String email, String password) {
         this.username = username;
