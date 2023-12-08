@@ -2,55 +2,51 @@ import { Box, Button, Flex, Grid, Heading, useMediaQuery } from "@chakra-ui/reac
 import { useEffect, useState } from "react";
 import { MdAdd } from "react-icons/md";
 import { TripDB } from "src/database";
+import Header from "src/pages/home-page/components/Header";
 import NewTripDialog from "src/pages/home-page/components/NewTripDialog";
 import TripCard from "src/pages/home-page/components/TripCard";
 import { User } from "src/pages/register-page/RegisterPage";
 import { TripCtor } from "src/trip";
 import { useLocation } from "wouter";
 
-interface HeaderProps {
-    user: User
+export interface Trip {
+    id: number
+    name: string
+    startDate: string
+    endDate: string
 }
 
-function Header(props: HeaderProps) {
-    console.log(props.user)
-    return (
-        <Flex
-            background='white'
-            width='100%'
-            height={HEADER_HEIGHT}
-            position='fixed'
-            shadow='md'
-        >
-            <Flex width='100%' justifyContent='center' alignItems='center'>
-                <Flex margin='32px' width={PAGE_WIDTH} fontSize='2xl'>
-                    TripHarmony ({props.user.username})
-
-                    <Button marginLeft='auto' onClick={() => {
-                        localStorage.removeItem('cur_user')
-                        location.reload()
-                    }}>Log Out</Button>
-                </Flex>
-            </Flex>
-        </Flex>
-    )
-}
-
-const HEADER_HEIGHT = '70px'
-const PAGE_WIDTH = '1280px'
+export const HEADER_HEIGHT = '70px'
+export const PAGE_WIDTH = '1280px'
 
 export default function HomePage() {
     const [isWide] = useMediaQuery(`(min-width: ${PAGE_WIDTH}))`)
     const [showNewTripDialog, setShowNewTripDialog] = useState(false)
     const [_, setLocation] = useLocation()
     const [user, setUser] = useState<User | null>(null)
+    const [trips, setTrips] = useState<Trip[]>([])
+
+    async function getTrips(userId: number): Promise<Trip[]> {
+        const response = await fetch(`http://localhost:8080/api/users/${userId}/trips`)
+        const trips: Trip[] = await response.json()
+
+        return trips
+    }
 
     useEffect(() => {
-        if (localStorage.getItem('cur_user')) {
-            setUser(JSON.parse(localStorage.getItem('cur_user')!) as User)
-        } else {
-            setLocation('/register')
+        async function init() {
+            if (localStorage.getItem('cur_user')) {
+                const user = JSON.parse(localStorage.getItem('cur_user')!) as User
+                setUser(user)
+
+                const trips: Trip[] = await getTrips(user.id);
+                setTrips(trips)
+            } else {
+                setLocation('/register')
+            }
         }
+
+        init()
     }, [])
 
     function createTrip(tripCtor: TripCtor) {
@@ -96,7 +92,7 @@ export default function HomePage() {
                             </Flex>
 
                             <Grid width='100%' gridTemplateColumns={{ base: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)', lg: 'repeat(4, 1fr)' }} gap='8px'>
-                                {TripDB.trips.map((trip, index) => (
+                                {trips.map((trip, index) => (
                                     <TripCard
                                         trip={trip}
                                         key={index}

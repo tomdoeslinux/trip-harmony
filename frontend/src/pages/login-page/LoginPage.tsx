@@ -25,9 +25,6 @@ export default function LoginPage() {
         })
 
         const loggedInUser: User = await response.json()
-
-        console.log(loggedInUser)
-
         localStorage.setItem('cur_user', JSON.stringify(loggedInUser))
 
         setLocation('/')

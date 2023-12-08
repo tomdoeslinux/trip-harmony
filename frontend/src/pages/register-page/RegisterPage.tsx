@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { Link, useLocation } from "wouter";
 
 export interface User {
+    id: number
     username: string
     email: string
     password: string

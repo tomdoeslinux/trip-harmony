@@ -1,9 +1,10 @@
 import { Flex, Box } from "@chakra-ui/react"
-import { Trip } from "src/trip"
+import { Trip } from "src/pages/home-page/HomePage"
+import { _Trip } from "src/trip"
 
 interface TripCardProps {
     trip: Trip
-    onClick: (tripId: string) => void
+    onClick: (tripId: number) => void
 }
 
 export default function TripCard(props: TripCardProps) {

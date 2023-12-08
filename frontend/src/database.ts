@@ -1,4 +1,4 @@
-import { Trip, TripCtor } from "src/trip";
+import { _Trip, TripCtor } from "src/trip";
 
 export class TripDB {
     private static trip1: TripCtor = {
@@ -41,16 +41,16 @@ export class TripDB {
         endDate: new Date('2023-01-14')
     };
 
-    static trips: Trip[] = [
-        new Trip(TripDB.trip1),
-        new Trip(TripDB.trip2),
-        new Trip(TripDB.trip3),
-        new Trip(TripDB.trip4),
-        new Trip(TripDB.trip5)
+    static trips: _Trip[] = [
+        new _Trip(TripDB.trip1),
+        new _Trip(TripDB.trip2),
+        new _Trip(TripDB.trip3),
+        new _Trip(TripDB.trip4),
+        new _Trip(TripDB.trip5)
     ];
 
     static addTrip(tripCtor: TripCtor) {
-        TripDB.trips.push(new Trip(tripCtor))
+        TripDB.trips.push(new _Trip(tripCtor))
     }
 
     private constructor() { }

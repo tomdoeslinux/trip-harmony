@@ -1,5 +1,3 @@
-import { generateId } from "src/util"
-
 export interface Location {
     id: string
     name: string
@@ -20,7 +18,7 @@ export interface TripCtor {
     endDate: Date
 }
 
-export class Trip {
+export class _Trip {
     readonly id: string
     readonly itinerary: TripDay[]
     readonly name: string

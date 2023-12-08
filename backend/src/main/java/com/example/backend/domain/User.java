@@ -1,22 +1,27 @@
 package com.example.backend.domain;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.PostPersist;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @Entity
 @Table(name = "user")
 public class User {
@@ -39,9 +44,18 @@ public class User {
     @CreationTimestamp
     private LocalDateTime memberSince;
 
-    public User(String username, String email, String password) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Trip> trips = new ArrayList<>();
+
+    @PostPersist
+    private void generateDummyTrips() {
+        for (int i = 0; i < 5; ++i) {
+            Trip dummyTrip = new Trip();
+            dummyTrip.setName("Dummy Trip " + (i + 1));
+            dummyTrip.setStartDate(LocalDate.now().plusDays(i));
+            dummyTrip.setEndDate(LocalDate.now().plusDays(i + 3));
+            dummyTrip.setUser(this);
+            trips.add(dummyTrip);
+        }
     }
 }

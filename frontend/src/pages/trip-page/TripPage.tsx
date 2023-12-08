@@ -1,6 +1,6 @@
 import { Box, Grid, GridItem, Heading, } from '@chakra-ui/react'
 import { useMemo, useState } from 'react'
-import { Trip, Location, TripCtor } from '../../trip'
+import { _Trip, Location, TripCtor } from '../../trip'
 import TripDayComponent from './components/TripDay'
 import Map from './components/Map'
 import { TripDB } from 'src/database'
@@ -10,7 +10,7 @@ interface TripPageProps {
 }
 
 export default function TripPage(props: TripPageProps) {
-    const trip: Trip = useMemo(() => TripDB.trips.find((trip) => trip.id === props.tripId)!, [])
+    const trip: _Trip = useMemo(() => TripDB.trips.find((trip) => trip.id === props.tripId)!, [])
     const [itinerary, setItinerary] = useState(trip.itinerary)
 
     return (
