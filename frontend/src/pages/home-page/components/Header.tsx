@@ -14,6 +14,7 @@ export default function Header(props: HeaderProps) {
             height={HEADER_HEIGHT}
             position='fixed'
             shadow='md'
+            zIndex='999'
         >
             <Flex width='100%' justifyContent='center' alignItems='center'>
                 <Flex margin='32px' width={PAGE_WIDTH} fontSize='2xl'>
