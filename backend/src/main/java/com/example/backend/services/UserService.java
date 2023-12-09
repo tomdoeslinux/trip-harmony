@@ -30,11 +30,11 @@ public class UserService {
     }
 
     public List<Trip> getTrips(Long userId) {
-        return userRepository.findById(userId).orElseThrow(UserNotFoundException::new).getTrips();
+        return getUserById(userId).getTrips();
     }
 
     public Trip addTrip(Long userId, Trip trip) {
-        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        User user = getUserById(userId);
         trip.setUser(user);
 
         return tripRepository.save(trip);
@@ -48,5 +48,9 @@ public class UserService {
         }
 
         throw new UserNotFoundException();
+    }
+
+    private User getUserById(Long userId) {
+        return userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
     }
 }

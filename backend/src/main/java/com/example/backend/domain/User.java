@@ -25,12 +25,7 @@ import java.util.Random;
 @Setter
 @Entity
 @Table(name = "user")
-public class User {
-
-    @Id
-    @Column(name = "user_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class User extends BaseEntity {
 
     @Column(name = "username", nullable = false)
     private String username;
@@ -47,4 +42,8 @@ public class User {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Trip> trips = new ArrayList<>();
+
+    public void addTrip(Trip trip) {
+        this.trips.add(trip);
+    }
 }

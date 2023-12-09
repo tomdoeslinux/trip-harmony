@@ -6,6 +6,7 @@ export interface User {
 }
 
 export interface Location {
+    id: number
     name: string
     lat: number
     lon: number
@@ -88,5 +89,21 @@ export class API {
         const createdUser = await response.json()
 
         return createdUser
+    }
+
+    static async addLocationToTripDay(tripDayId: number, location: Location): Promise<void> {
+        await fetch(`http://localhost:8080/api/trip-days/${tripDayId}/locations`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(location)
+        })
+    }
+
+    static async deleteLocationFromTripDay(tripDayLocationId: number): Promise<void> {
+        await fetch(`http://localhost:8080/api/trip-day-locations/${tripDayLocationId}`, {
+            method: 'DELETE'
+        })
     }
 }

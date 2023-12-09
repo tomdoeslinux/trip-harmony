@@ -29,12 +29,7 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "trip")
-public class Trip {
-
-    @Id
-    @Column(name = "trip_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Trip extends BaseEntity {
 
     @Embedded
     @AttributeOverrides({
@@ -71,7 +66,7 @@ public class Trip {
     )
     private User user;
 
-    @OneToMany(mappedBy = "trip", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "trip", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<TripDay> tripDays = new ArrayList<>();
 
     @PostPersist

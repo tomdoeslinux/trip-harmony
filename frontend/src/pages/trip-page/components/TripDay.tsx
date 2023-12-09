@@ -8,7 +8,7 @@ import { Location, TripDay } from "src/api"
 interface TripDayComponentProps {
     tripDay: TripDay
     onAddLocation: (location: Location) => void
-    onDeleteLocation: (locationId: string) => void
+    onDeleteLocation: (location: Location) => void
 }
 
 export default function TripDayComponent(props: TripDayComponentProps) {

@@ -1,7 +1,7 @@
 import { Box, Grid, GridItem, Heading } from '@chakra-ui/react'
 import { _Trip, _Location } from '../../trip'
 import { useEffect, useState } from 'react'
-import { API, Trip, Location } from 'src/api'
+import { API, Trip, Location, TripDay } from 'src/api'
 import TripDayComponent from 'src/pages/trip-page/components/TripDay'
 import Map from 'src/pages/trip-page/components/Map'
 
@@ -12,12 +12,24 @@ interface TripPageProps {
 export default function TripPage(props: TripPageProps) {
     const [trip, setTrip] = useState<Trip | null>(null)
 
-    useEffect(() => {
-        async function fetchTrip() {
-            const trip: Trip = await API.getTripById(props.tripId)
-            setTrip(trip)
-        }
+    console.log(trip)
 
+    async function fetchTrip() {
+        const trip: Trip = await API.getTripById(props.tripId)
+        setTrip(trip)
+    }
+
+    async function addLocationHandler(tripDayId: number, location: Location) {
+        await API.addLocationToTripDay(tripDayId, location)
+        await fetchTrip()
+    }
+
+    async function deleteLocationHandler(tripDayLocationId: number) {
+        await API.deleteLocationFromTripDay(tripDayLocationId)
+        await fetchTrip()
+    }
+
+    useEffect(() => {
         fetchTrip()
     }, [])
 
@@ -35,14 +47,8 @@ export default function TripPage(props: TripPageProps) {
                     <TripDayComponent
                         key={index}
                         tripDay={tripDay}
-                        onDeleteLocation={(locationId: string) => {
-                            // trip.deleteLocationById(locationId)
-                            // setItinerary([...trip.itinerary])
-                        }}
-                        onAddLocation={(location: Location) => {
-                            // trip.addLocationToDay(tripDay.date, location)
-                            // setItinerary([...trip.itinerary])
-                        }}
+                        onDeleteLocation={(location) => deleteLocationHandler(location.id)}
+                        onAddLocation={(location) => addLocationHandler(tripDay.id, location)}
                     />
                 ))}
             </GridItem>

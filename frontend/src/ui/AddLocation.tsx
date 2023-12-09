@@ -31,6 +31,7 @@ export default function AddLocation({ onAddLocation, showDoneButton, ...props }:
             const data: any[] = await response.json()
 
             const locations: Location[] = data.map((item) => ({
+                id: 0,
                 name: item.display_name,
                 lat: Number(item.lat),
                 lon: Number(item.lon)

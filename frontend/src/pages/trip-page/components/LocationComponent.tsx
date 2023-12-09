@@ -4,7 +4,7 @@ import { Location } from "src/api"
 
 interface LocationComponentProps {
     location: Location
-    onDeleteLocation: (locationId: string) => void
+    onDeleteLocation: (location: Location) => void
 }
 
 export default function LocationComponent(props: LocationComponentProps) {
@@ -25,7 +25,7 @@ export default function LocationComponent(props: LocationComponentProps) {
                 marginLeft='auto'
                 aria-label='Delete'
                 variant='ghost'
-                onClick={() => {} }
+                onClick={() => props.onDeleteLocation(props.location)}
             >
                 <MdDelete />
             </IconButton>
