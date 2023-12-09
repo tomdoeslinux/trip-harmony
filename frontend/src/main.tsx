@@ -22,8 +22,8 @@ function Router() {
             <Route path='/' component={App} />
             <Route path='/login' component={LoginPage} />
             <Route path='/register' component={RegisterPage} />
-            <Route path='/trips/:id'>
-                {params => <TripPage tripId={params.id} />}
+            <Route path='/trips/:tripId'>
+                {params => <TripPage tripId={parseInt(params.tripId)} />}
             </Route>
         </>
     )

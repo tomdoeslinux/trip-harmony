@@ -21,7 +21,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
-@CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
 
     private final UserService userService;
@@ -31,7 +30,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("{userId}/trips")
+    @GetMapping("/{userId}/trips")
     public ResponseEntity<List<Trip>> getTrips(@PathVariable Long userId) {
         List<Trip> trips = userService.getTrips(userId);
 

@@ -3,7 +3,7 @@ import { useState } from "react"
 import { MdArrowForwardIos } from "react-icons/md"
 import AddLocation from "../../../ui/AddLocation"
 import LocationComponent from "./LocationComponent"
-import { Location, TripDay } from "src/trip"
+import { Location, TripDay } from "src/api"
 
 interface TripDayComponentProps {
     tripDay: TripDay
@@ -27,7 +27,7 @@ export default function TripDayComponent(props: TripDayComponentProps) {
                     </Box>
                 </IconButton>
 
-                <Heading as='h2' size='md'>{props.tripDay.date.toDateString()}</Heading>
+                <Heading as='h2' size='md'>{props.tripDay.date}</Heading>
             </Flex>
 
             {isExpanded && (

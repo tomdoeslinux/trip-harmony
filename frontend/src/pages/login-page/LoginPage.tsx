@@ -1,6 +1,6 @@
 import { Flex, Text, Heading, Input, Button, useMediaQuery } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
-import { User } from "src/pages/register-page/RegisterPage";
+import { API, User } from "src/api";
 import { Link, useLocation } from "wouter";
 
 interface LoginParam {
@@ -25,7 +25,7 @@ export default function LoginPage() {
         })
 
         const loggedInUser: User = await response.json()
-        localStorage.setItem('cur_user', JSON.stringify(loggedInUser))
+        API.login(loggedInUser)
 
         setLocation('/')
     }

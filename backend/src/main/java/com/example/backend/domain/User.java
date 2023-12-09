@@ -19,6 +19,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Getter
 @Setter
@@ -49,13 +50,31 @@ public class User {
 
     @PostPersist
     private void generateDummyTrips() {
-        for (int i = 0; i < 5; ++i) {
-            Trip dummyTrip = new Trip();
-            dummyTrip.setName("Dummy Trip " + (i + 1));
-            dummyTrip.setStartDate(LocalDate.now().plusDays(i));
-            dummyTrip.setEndDate(LocalDate.now().plusDays(i + 3));
-            dummyTrip.setUser(this);
-            trips.add(dummyTrip);
+        for (int i = 1; i <= 5; i++) {
+            Trip trip = new Trip();
+            trip.setDestination(new Location("Destination", 40.7128, 74.0060));
+            trip.setName("Neu Dummy Trip " + i);
+            trip.setStartDate(LocalDate.now().plusDays(i));
+            trip.setEndDate(trip.getStartDate().plusDays(7)); // 7 days trip duration
+            trip.setUser(this);
+
+            Random random = new Random();
+
+            for (int day = 1; day <= 5; day++) {
+                TripDay tripDay = new TripDay();
+                tripDay.setDate(trip.getStartDate().plusDays(day));
+                tripDay.setTrip(trip);
+
+                Location location = new Location();
+                location.setName("Location " + day);
+                location.setLat(-90 + 180 * random.nextDouble());
+                location.setLon(-180 + 360 * random.nextDouble());
+
+                tripDay.getLocations().add(location);
+                trip.getTripDays().add(tripDay);
+            }
+
+            trips.add(trip);
         }
     }
 }

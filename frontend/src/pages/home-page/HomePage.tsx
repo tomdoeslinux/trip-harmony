@@ -1,20 +1,12 @@
 import { Box, Button, Flex, Grid, Heading, useMediaQuery } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { MdAdd } from "react-icons/md";
-import { TripDB } from "src/database";
+import { API, Trip, User } from "src/api";
 import Header from "src/pages/home-page/components/Header";
 import NewTripDialog from "src/pages/home-page/components/NewTripDialog";
 import TripCard from "src/pages/home-page/components/TripCard";
-import { User } from "src/pages/register-page/RegisterPage";
 import { TripCtor } from "src/trip";
 import { useLocation } from "wouter";
-
-export interface Trip {
-    id: number
-    name: string
-    startDate: string
-    endDate: string
-}
 
 export const HEADER_HEIGHT = '70px'
 export const PAGE_WIDTH = '1280px'
@@ -26,20 +18,13 @@ export default function HomePage() {
     const [user, setUser] = useState<User | null>(null)
     const [trips, setTrips] = useState<Trip[]>([])
 
-    async function getTrips(userId: number): Promise<Trip[]> {
-        const response = await fetch(`http://localhost:8080/api/users/${userId}/trips`)
-        const trips: Trip[] = await response.json()
-
-        return trips
-    }
-
     useEffect(() => {
         async function init() {
-            if (localStorage.getItem('cur_user')) {
-                const user = JSON.parse(localStorage.getItem('cur_user')!) as User
-                setUser(user)
+            if (API.isLoggedIn()) {
+                const loggedInUser = API.getLoggedInUser()
+                setUser(loggedInUser)
 
-                const trips: Trip[] = await getTrips(user.id);
+                const trips: Trip[] = await API.getTrips(loggedInUser.id);
                 setTrips(trips)
             } else {
                 setLocation('/register')
@@ -51,8 +36,8 @@ export default function HomePage() {
 
     function createTrip(tripCtor: TripCtor) {
         setShowNewTripDialog(false)
-        TripDB.addTrip(tripCtor)
-        setLocation(`/trip/${TripDB.trips[TripDB.trips.length - 1].id}`)
+        // TripDB.addTrip(tripCtor)
+        // setLocation(`/trip/${TripDB.trips[TripDB.trips.length - 1].id}`)
     }
 
     return (

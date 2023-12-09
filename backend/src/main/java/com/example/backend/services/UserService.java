@@ -31,9 +31,9 @@ public class UserService {
     }
 
     public User login(LoginParam loginParam) {
-        User user = userRepository.findByUsername(loginParam.getUsername()).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findByUsername(loginParam.username()).orElseThrow(UserNotFoundException::new);
 
-        if (loginParam.getPassword().equals(user.getPassword())) {
+        if (loginParam.password().equals(user.getPassword())) {
             return user;
         }
 

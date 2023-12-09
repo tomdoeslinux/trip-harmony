@@ -1,28 +1,28 @@
-export interface Location {
+export interface _Location {
     id: string
     name: string
     lat: number
     lon: number
 }
 
-export interface TripDay {
+export interface _TripDay {
     date: Date,
-    locations: Location[]
+    locations: _Location[]
 }
 
 export interface TripCtor {
     id: string
     name: string
-    location: Location
+    location: _Location
     startDate: Date
     endDate: Date
 }
 
 export class _Trip {
     readonly id: string
-    readonly itinerary: TripDay[]
+    readonly itinerary: _TripDay[]
     readonly name: string
-    readonly location: Location
+    readonly location: _Location
     private readonly startDate: Date
     private readonly endDate: Date
 
@@ -36,8 +36,8 @@ export class _Trip {
         this.itinerary = this.generateItinerary()
     }
 
-    private generateItinerary(): TripDay[] {
-        const itinerary: TripDay[] = []
+    private generateItinerary(): _TripDay[] {
+        const itinerary: _TripDay[] = []
         const currentDate = new Date(this.startDate)
 
         while (currentDate <= this.endDate) {
@@ -49,7 +49,7 @@ export class _Trip {
         return itinerary
     }
 
-    addLocationToDay(date: Date, location: Location) {
+    addLocationToDay(date: Date, location: _Location) {
         const tripDay = this.itinerary.find((tripDay) => tripDay.date.getTime() === date.getTime())
 
         if (tripDay) {

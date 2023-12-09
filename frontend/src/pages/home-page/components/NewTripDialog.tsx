@@ -1,6 +1,5 @@
 import { Modal, Text, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, Input, ModalFooter, Button } from "@chakra-ui/react"
 import { useForm } from "react-hook-form"
-import { TripDB } from "src/database"
 import { TripCtor } from "src/trip"
 import AddLocation from "src/ui/AddLocation"
 
@@ -13,7 +12,7 @@ export default function NewTripDialog(props: NewTripDialogProps) {
     const { register, setValue, watch } = useForm<TripCtor>()
 
     function createTripHandler() {
-        setValue('id', (TripDB.trips.length + 1).toString())
+        // setValue('id', (TripDB.trips.length + 1).toString())
         props.onCreateTrip(watch())
     }
 

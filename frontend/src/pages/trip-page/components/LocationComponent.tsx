@@ -1,6 +1,6 @@
 import { Flex, IconButton, Box } from "@chakra-ui/react"
 import { MdDelete, MdLocationPin } from 'react-icons/md'
-import { Location } from '../../../trip'
+import { Location } from "src/api"
 
 interface LocationComponentProps {
     location: Location
@@ -25,7 +25,7 @@ export default function LocationComponent(props: LocationComponentProps) {
                 marginLeft='auto'
                 aria-label='Delete'
                 variant='ghost'
-                onClick={() => props.onDeleteLocation(props.location.id)}
+                onClick={() => {} }
             >
                 <MdDelete />
             </IconButton>

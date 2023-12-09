@@ -1,5 +1,5 @@
 import { TileLayer, Marker, Popup, MapContainer } from "react-leaflet"
-import { Location } from "src/trip"
+import { Location } from "src/api"
 
 interface MapProps {
     startingLocation: Location

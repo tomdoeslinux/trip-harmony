@@ -4,19 +4,19 @@ import { useState, useCallback, useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { MdCheck } from "react-icons/md"
 import { buildUrl, generateId } from "src/util"
-import { Location } from 'src/trip'
+import { _Location } from 'src/trip'
 import Autocomplete from "src/ui/Autocomplete"
 
 type AddLocationProps ={
-    onAddLocation: (location: Location) => void
+    onAddLocation: (location: _Location) => void
     showDoneButton?: boolean
 } & InputProps
 
 export default function AddLocation({ onAddLocation, showDoneButton, ...props }: AddLocationProps) {
     const { register, watch, setValue } = useForm<{ locationSearchInput: string }>()
-    const [suggestedLocations, setSuggestedLocations] = useState<Location[]>([])
+    const [suggestedLocations, setSuggestedLocations] = useState<_Location[]>([])
     const [isLoadingSuggestedLocations, setIsLoadingSuggestedLocations] = useState(false)
-    const [selectedLocation, setSelectedLocation] = useState<Location | null>(null)
+    const [selectedLocation, setSelectedLocation] = useState<_Location | null>(null)
     const locationSearchInput = watch('locationSearchInput')
 
     async function fetchSuggestedLocations(searchInput: string) {
@@ -30,7 +30,7 @@ export default function AddLocation({ onAddLocation, showDoneButton, ...props }:
             })
             const data: any[] = await response.json()
 
-            const locations: Location[] = data.map((item) => ({
+            const locations: _Location[] = data.map((item) => ({
                 id: generateId(),
                 name: item.display_name,
                 lat: Number(item.lat),
