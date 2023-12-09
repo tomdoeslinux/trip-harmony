@@ -47,34 +47,4 @@ public class User {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Trip> trips = new ArrayList<>();
-
-    @PostPersist
-    private void generateDummyTrips() {
-        for (int i = 1; i <= 5; i++) {
-            Trip trip = new Trip();
-            trip.setDestination(new Location("Destination", 40.7128, 74.0060));
-            trip.setName("Neu Dummy Trip " + i);
-            trip.setStartDate(LocalDate.now().plusDays(i));
-            trip.setEndDate(trip.getStartDate().plusDays(7)); // 7 days trip duration
-            trip.setUser(this);
-
-            Random random = new Random();
-
-            for (int day = 1; day <= 5; day++) {
-                TripDay tripDay = new TripDay();
-                tripDay.setDate(trip.getStartDate().plusDays(day));
-                tripDay.setTrip(trip);
-
-                Location location = new Location();
-                location.setName("Location " + day);
-                location.setLat(-90 + 180 * random.nextDouble());
-                location.setLon(-180 + 360 * random.nextDouble());
-
-                tripDay.getLocations().add(location);
-                trip.getTripDays().add(tripDay);
-            }
-
-            trips.add(trip);
-        }
-    }
 }

@@ -7,7 +7,3 @@ export function buildUrl(baseUrl: string, params: Record<string, string>): URL {
 
     return url
 }
-
-export function generateId(): string {
-    return 'id' + Math.random().toString(16).slice(2)
-}

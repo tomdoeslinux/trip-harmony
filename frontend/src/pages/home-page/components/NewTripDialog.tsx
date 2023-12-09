@@ -1,20 +1,15 @@
 import { Modal, Text, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, Input, ModalFooter, Button } from "@chakra-ui/react"
 import { useForm } from "react-hook-form"
-import { TripCtor } from "src/trip"
+import { Trip } from "src/api"
 import AddLocation from "src/ui/AddLocation"
 
 interface NewTripDialogProps {
     onClose: () => void
-    onCreateTrip: (tripCtor: TripCtor) => void
+    onCreateTrip: (trip: Trip) => void
 }
 
 export default function NewTripDialog(props: NewTripDialogProps) {
-    const { register, setValue, watch } = useForm<TripCtor>()
-
-    function createTripHandler() {
-        // setValue('id', (TripDB.trips.length + 1).toString())
-        props.onCreateTrip(watch())
-    }
+    const { register, setValue, watch } = useForm<Trip>()
 
     return (
         <Modal isOpen={true} onClose={props.onClose} isCentered={true}>
@@ -28,17 +23,17 @@ export default function NewTripDialog(props: NewTripDialogProps) {
                     <Input {...register('name')} />
 
                     <Text marginTop='16px'>Location:</Text>
-                    <AddLocation onAddLocation={(location) => setValue('location', location)} placeholder='' />
+                    <AddLocation onAddLocation={(destination) => setValue('destination', destination)} placeholder='' />
 
                     <Text marginTop='16px'>Start Date:</Text>
-                    <Input type='date' {...register('startDate', { valueAsDate: true })} />
+                    <Input type='date' {...register('startDate')} />
 
                     <Text marginTop='16px'>End Date:</Text>
-                    <Input type='date' {...register('endDate', { valueAsDate: true })} />
+                    <Input type='date' {...register('endDate')} />
                 </ModalBody>
 
                 <ModalFooter>
-                    <Button colorScheme='blue' onClick={createTripHandler}>
+                    <Button colorScheme='blue' onClick={() => props.onCreateTrip(watch())}>
                         Done
                     </Button>
 

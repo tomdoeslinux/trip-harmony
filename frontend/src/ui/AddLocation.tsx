@@ -3,20 +3,20 @@ import debounce from "lodash.debounce"
 import { useState, useCallback, useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { MdCheck } from "react-icons/md"
-import { buildUrl, generateId } from "src/util"
-import { _Location } from 'src/trip'
+import { buildUrl } from "src/util"
 import Autocomplete from "src/ui/Autocomplete"
+import { Location } from "src/api"
 
-type AddLocationProps ={
-    onAddLocation: (location: _Location) => void
+type AddLocationProps = {
+    onAddLocation: (location: Location) => void
     showDoneButton?: boolean
 } & InputProps
 
 export default function AddLocation({ onAddLocation, showDoneButton, ...props }: AddLocationProps) {
     const { register, watch, setValue } = useForm<{ locationSearchInput: string }>()
-    const [suggestedLocations, setSuggestedLocations] = useState<_Location[]>([])
+    const [suggestedLocations, setSuggestedLocations] = useState<Location[]>([])
     const [isLoadingSuggestedLocations, setIsLoadingSuggestedLocations] = useState(false)
-    const [selectedLocation, setSelectedLocation] = useState<_Location | null>(null)
+    const [selectedLocation, setSelectedLocation] = useState<Location | null>(null)
     const locationSearchInput = watch('locationSearchInput')
 
     async function fetchSuggestedLocations(searchInput: string) {
@@ -30,8 +30,7 @@ export default function AddLocation({ onAddLocation, showDoneButton, ...props }:
             })
             const data: any[] = await response.json()
 
-            const locations: _Location[] = data.map((item) => ({
-                id: generateId(),
+            const locations: Location[] = data.map((item) => ({
                 name: item.display_name,
                 lat: Number(item.lat),
                 lon: Number(item.lon)

@@ -37,6 +37,13 @@ public class UserController {
         return ResponseEntity.ok(trips);
     }
 
+    @PostMapping("/{userId}/trips")
+    public ResponseEntity<Trip> addTrip(@PathVariable Long userId, @RequestBody Trip trip) {
+        Trip createdTrip = userService.addTrip(userId, trip);
+
+        return ResponseEntity.ok(createdTrip);
+    }
+
     @PostMapping
     public ResponseEntity<User> createUser(@RequestBody User user) {
         User newUser = userService.save(user);

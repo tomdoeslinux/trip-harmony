@@ -15,6 +15,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PostPersist;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -72,4 +73,22 @@ public class Trip {
 
     @OneToMany(mappedBy = "trip", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<TripDay> tripDays = new ArrayList<>();
+
+    @PostPersist
+    private void generateTripDays() {
+        List<TripDay> newTripDays = new ArrayList<>();
+        LocalDate currentDate = startDate;
+
+        while (!currentDate.isAfter(endDate)) {
+            TripDay tripDay = new TripDay();
+            tripDay.setDate(currentDate);
+            tripDay.setTrip(this);
+
+            newTripDays.add(tripDay);
+
+            currentDate = currentDate.plusDays(1);
+        }
+
+        this.tripDays = newTripDays;
+    }
 }

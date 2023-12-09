@@ -23,6 +23,8 @@ public class TripController {
 
     @GetMapping("/{tripId}")
     public ResponseEntity<Trip> getTripById(@PathVariable Long tripId) {
-        return ResponseEntity.ok(tripService.getTripById(tripId));
+        Trip trip = tripService.getTripById(tripId);
+
+        return ResponseEntity.ok(trip);
     }
 }

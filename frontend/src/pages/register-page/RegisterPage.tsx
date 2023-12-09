@@ -11,16 +11,8 @@ export default function RegisterPage() {
     const [_, setLocation] = useLocation()
 
     async function createUser(user: User) {
-        const response = await fetch('http://localhost:8080/api/users', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(user)
-        })
-
-        const newUser: User = await response.json()
-        API.login(newUser)
+        const createdUser: User = await API.createUser(user)
+        API.login(createdUser)
 
         setLocation('/')
     }

@@ -49,14 +49,44 @@ export class API {
     }
 
     static async getTrips(userId: number): Promise<Trip[]> {
-        const response = await fetch(`http://localhost:8080/api/users/${userId}/trips`)
+        const response = await fetch(`http://localhost:8080/api/users/${userId}/trips`, {
+            method: 'GET'
+        })
         const trips: Trip[] = await response.json()
         return trips
     }
 
     static async getTripById(tripId: number): Promise<Trip> {
-        const response = await fetch(`http://localhost:8080/api/trips/${tripId}`)
+        const response = await fetch(`http://localhost:8080/api/trips/${tripId}`, { 
+            method: 'GET'
+        })
         const trip: Trip = await response.json()
         return trip
+    }
+
+    static async addTrip(userId: number, trip: Trip): Promise<Trip> {
+        const response = await fetch(`http://localhost:8080/api/users/${userId}/trips`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(trip)
+        })
+        const createdTrip = await response.json()
+
+        return createdTrip
+    }
+
+    static async createUser(user: User): Promise<User> {
+        const response = await fetch('http://localhost:8080/api/users', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(user)
+        })
+        const createdUser = await response.json()
+
+        return createdUser
     }
 }

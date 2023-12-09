@@ -34,10 +34,13 @@ export default function HomePage() {
         init()
     }, [])
 
-    function createTrip(tripCtor: TripCtor) {
-        setShowNewTripDialog(false)
-        // TripDB.addTrip(tripCtor)
-        // setLocation(`/trip/${TripDB.trips[TripDB.trips.length - 1].id}`)
+    async function createTrip(trip: Trip): Promise<void> {
+        if (user) {
+            console.log('created trip ' + JSON.stringify(trip))
+            setShowNewTripDialog(false)
+            const createdTrip: Trip = await API.addTrip(user.id, trip)
+            setLocation(`/trips/${createdTrip.id}`)
+        }
     }
 
     return (
