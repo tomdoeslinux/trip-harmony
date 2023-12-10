@@ -41,8 +41,8 @@ export default function DayItem(props: DayItemProps) {
 
             {showNewActivityDialog && (
                 <NewActivityDialog 
-                    onCreateActivity={(activity) => {
-                        API.addActivity(props.day.id, activity)
+                    onCreateActivity={async (activity) => {
+                        await API.addActivity(props.day.id, activity)
                         setShowNewActivityDialog(false)
                     }} 
                     onClose={() => setShowNewActivityDialog(false)} 

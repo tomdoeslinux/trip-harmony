@@ -11,7 +11,6 @@ export const HEADER_HEIGHT = '70px'
 export const PAGE_WIDTH = '1280px'
 
 export default function HomePage() {
-    const [isWide] = useMediaQuery(`(min-width: ${PAGE_WIDTH}))`)
     const [showNewTripDialog, setShowNewTripDialog] = useState(false)
     const [_, setLocation] = useLocation()
     const [user, setUser] = useState<User | null>(null)
@@ -62,8 +61,7 @@ export default function HomePage() {
                             marginLeft='32px'
                             marginRight='32px'
                             gap='16px'
-                            width={isWide ? PAGE_WIDTH : '100%'}
-                            maxWidth={PAGE_WIDTH}
+                            width={PAGE_WIDTH}
                         >
                             <Flex alignItems='center'>
                                 <Heading as='h1' fontSize='lg'>Your Trips</Heading>

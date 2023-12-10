@@ -54,18 +54,16 @@ export default function DestinationInput({ onAddLocation, ...props }: Destinatio
     }, [locationSearchInput])
 
     return (
-        <Flex gap='8px'>
-            <Autocomplete
-                suggestions={suggestedDestinations.map((location) => location.name)}
-                onSuggestionClick={(index) => {
-                    setValue('locationSearchInput', suggestedDestinations[index].name)
-                    onAddLocation(suggestedDestinations[index])
-                }}
-                placeholder='Add Location'
-                isLoading={isLoadingSuggestedLocations}
-                {...register('locationSearchInput')}
-                {...props}
-            />
-        </Flex>
+        <Autocomplete
+            suggestions={suggestedDestinations.map((location) => location.name)}
+            onSuggestionClick={(index) => {
+                setValue('locationSearchInput', suggestedDestinations[index].name)
+                onAddLocation(suggestedDestinations[index])
+            }}
+            placeholder='Add Location'
+            isLoading={isLoadingSuggestedLocations}
+            {...register('locationSearchInput')}
+            {...props}
+        />
     )
 }

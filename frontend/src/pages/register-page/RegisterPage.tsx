@@ -1,4 +1,4 @@
-import { Button, Flex, Heading, Input, Text, useMediaQuery } from "@chakra-ui/react";
+import { Button, Flex, Heading, Input, Text } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { API, User } from "src/api";
 import { Link, useLocation } from "wouter";
@@ -6,13 +6,12 @@ import { Link, useLocation } from "wouter";
 const PAGE_WIDTH = '420px'
 
 export default function RegisterPage() {
-    const [isWide] = useMediaQuery(`(min-width: ${PAGE_WIDTH})`)
     const { register, handleSubmit } = useForm<User>()
     const [_, setLocation] = useLocation()
 
     async function createUser(user: User) {
         const createdUser: User = await API.createUser(user)
-        API.login(createdUser)
+        await API.login(createdUser)
 
         setLocation('/')
     }
@@ -24,7 +23,13 @@ export default function RegisterPage() {
             height='100vh'
         >
             <Flex height='100%' alignItems='center' justifyContent='center'>
-                <Flex as='form' onSubmit={handleSubmit((user) => createUser(user))} margin='32px' flexDirection='column' width={isWide ? PAGE_WIDTH : '100%'}>
+                <Flex 
+                    as='form' 
+                    onSubmit={handleSubmit((user) => createUser(user))} 
+                    margin='32px' 
+                    flexDirection='column'
+                    width={PAGE_WIDTH}
+                >
                     <Heading as='h1' textAlign='center'>Register</Heading>
                     <Text marginTop='16px'>Username</Text>
                     <Input marginTop='4px' background='white' {...register('username')} />

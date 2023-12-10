@@ -34,13 +34,29 @@ export interface Trip {
     days: Day[]
 }
 
+export interface LoginParam {
+    username: string
+    password: string
+}
+
 export class API {
     private constructor() { }
 
     private static readonly LOGGED_IN_USER_KEY = 'logged_in_user'
 
-    static login(user: User) {
-        localStorage.setItem(API.LOGGED_IN_USER_KEY, JSON.stringify(user))
+    static async login(loginParam: LoginParam) {
+        const response = await fetch('http://localhost:8080/api/users/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(loginParam)
+        })
+
+        const loggedInUser: User = await response.json()
+        API.login(loggedInUser)
+
+        localStorage.setItem(API.LOGGED_IN_USER_KEY, JSON.stringify(loggedInUser))
     }
 
     static logout() {
@@ -88,9 +104,7 @@ export class API {
     static async addTrip(userId: number, trip: Trip): Promise<Trip> {
         const response = await fetch(`http://localhost:8080/api/users/${userId}/trips`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(trip)
         })
         const createdTrip = await response.json()
