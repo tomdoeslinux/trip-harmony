@@ -1,6 +1,6 @@
 package com.example.backend.services;
 
-import com.example.backend.domain.LoginParam;
+import com.example.backend.controllers.dtos.UserLoginDTO;
 import com.example.backend.domain.Trip;
 import com.example.backend.domain.User;
 import com.example.backend.exceptions.UserNotFoundException;
@@ -25,7 +25,7 @@ public class UserService {
         this.tripRepository = tripRepository;
     }
 
-    public User save(User user) {
+    public User register(User user) {
         return userRepository.save(user);
     }
 
@@ -40,10 +40,10 @@ public class UserService {
         return tripRepository.save(trip);
     }
 
-    public User login(LoginParam loginParam) {
-        User user = userRepository.findByUsername(loginParam.username()).orElseThrow(UserNotFoundException::new);
+    public User login(UserLoginDTO dto) {
+        User user = userRepository.findByUsername(dto.username()).orElseThrow(UserNotFoundException::new);
 
-        if (loginParam.password().equals(user.getPassword())) {
+        if (dto.password().equals(user.getPassword())) {
             return user;
         }
 

@@ -1,22 +1,19 @@
-import { Flex, IconButton, InputProps } from "@chakra-ui/react"
+import { Flex, InputProps } from "@chakra-ui/react"
 import debounce from "lodash.debounce"
 import { useState, useCallback, useEffect } from "react"
 import { useForm } from "react-hook-form"
-import { MdCheck } from "react-icons/md"
 import { buildUrl } from "src/util"
 import Autocomplete from "src/ui/Autocomplete"
-import { Location } from "src/api"
+import { Destination } from "src/api"
 
-type AddLocationProps = {
-    onAddLocation: (location: Location) => void
-    showDoneButton?: boolean
+type DestinationInputProps = {
+    onAddLocation: (location: Destination) => void
 } & InputProps
 
-export default function AddLocation({ onAddLocation, showDoneButton, ...props }: AddLocationProps) {
+export default function DestinationInput({ onAddLocation, ...props }: DestinationInputProps) {
     const { register, watch, setValue } = useForm<{ locationSearchInput: string }>()
-    const [suggestedLocations, setSuggestedLocations] = useState<Location[]>([])
+    const [suggestedDestinations, setSuggestedDestinations] = useState<Destination[]>([])
     const [isLoadingSuggestedLocations, setIsLoadingSuggestedLocations] = useState(false)
-    const [selectedLocation, setSelectedLocation] = useState<Location | null>(null)
     const locationSearchInput = watch('locationSearchInput')
 
     async function fetchSuggestedLocations(searchInput: string) {
@@ -30,14 +27,13 @@ export default function AddLocation({ onAddLocation, showDoneButton, ...props }:
             })
             const data: any[] = await response.json()
 
-            const locations: Location[] = data.map((item) => ({
-                id: 0,
+            const destinations: Destination[] = data.map((item) => ({
                 name: item.display_name,
                 lat: Number(item.lat),
                 lon: Number(item.lon)
             }))
 
-            setSuggestedLocations(locations)
+            setSuggestedDestinations(destinations)
             setIsLoadingSuggestedLocations(false)
         }
     }
@@ -48,7 +44,7 @@ export default function AddLocation({ onAddLocation, showDoneButton, ...props }:
         debouncedFetchSuggestedLocations(locationSearchInput)
 
         if (locationSearchInput?.trim().length === 0) {
-            setSuggestedLocations([])
+            setSuggestedDestinations([])
             debouncedFetchSuggestedLocations.cancel()
         }
 
@@ -60,36 +56,16 @@ export default function AddLocation({ onAddLocation, showDoneButton, ...props }:
     return (
         <Flex gap='8px'>
             <Autocomplete
-                suggestions={suggestedLocations.map((location) => location.name)}
+                suggestions={suggestedDestinations.map((location) => location.name)}
                 onSuggestionClick={(index) => {
-                    setValue('locationSearchInput', suggestedLocations[index].name)
-                    
-                    if (showDoneButton) {
-                        setSelectedLocation(suggestedLocations[index])
-                    } else {
-                        onAddLocation(suggestedLocations[index])
-                    }
+                    setValue('locationSearchInput', suggestedDestinations[index].name)
+                    onAddLocation(suggestedDestinations[index])
                 }}
                 placeholder='Add Location'
                 isLoading={isLoadingSuggestedLocations}
                 {...register('locationSearchInput')}
                 {...props}
             />
-
-            {showDoneButton && (
-                <IconButton
-                    aria-label='Add location'
-                    onClick={() => {
-                        if (selectedLocation) {
-                            setValue('locationSearchInput', '')
-                            setSuggestedLocations([])
-                            onAddLocation(selectedLocation)
-                        }
-                    }}
-                >
-                    <MdCheck />
-                </IconButton>
-            )}
         </Flex>
     )
 }

@@ -42,8 +42,4 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Trip> trips = new ArrayList<>();
-
-    public void addTrip(Trip trip) {
-        this.trips.add(trip);
-    }
 }

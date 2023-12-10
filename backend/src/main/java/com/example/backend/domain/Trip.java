@@ -1,17 +1,12 @@
 package com.example.backend.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.AttributeOverride;
-import jakarta.persistence.AttributeOverrides;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -32,21 +27,7 @@ import java.util.List;
 public class Trip extends BaseEntity {
 
     @Embedded
-    @AttributeOverrides({
-        @AttributeOverride(
-            name = "name",
-            column = @Column(name = "destination_name", nullable = false)
-        ),
-        @AttributeOverride(
-            name = "lat",
-            column = @Column(name = "destination_lat", nullable = false)
-        ),
-        @AttributeOverride(
-            name = "lon",
-            column = @Column(name = "destination_lon", nullable = false)
-        )
-    })
-    private Location destination;
+    private Destination destination;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -60,30 +41,27 @@ public class Trip extends BaseEntity {
     @JsonIgnore
     @ToString.Exclude
     @ManyToOne
-    @JoinColumn(
-        name = "user_id",
-        foreignKey = @ForeignKey(name = "fk_user_id")
-    )
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_user_id"))
     private User user;
 
     @OneToMany(mappedBy = "trip", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<TripDay> tripDays = new ArrayList<>();
+    private List<Day> days = new ArrayList<>();
 
     @PostPersist
-    private void generateTripDays() {
-        List<TripDay> newTripDays = new ArrayList<>();
+    private void generateDays() {
+        List<Day> newDays = new ArrayList<>();
         LocalDate currentDate = startDate;
 
         while (!currentDate.isAfter(endDate)) {
-            TripDay tripDay = new TripDay();
-            tripDay.setDate(currentDate);
-            tripDay.setTrip(this);
+            Day day = new Day();
+            day.setDate(currentDate);
+            day.setTrip(this);
 
-            newTripDays.add(tripDay);
+            newDays.add(day);
 
             currentDate = currentDate.plusDays(1);
         }
 
-        this.tripDays = newTripDays;
+        this.days = newDays;
     }
 }

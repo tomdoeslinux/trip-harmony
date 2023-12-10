@@ -1,21 +1,21 @@
-import { Modal, Text, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, Input, ModalFooter, Button } from "@chakra-ui/react"
+import { Modal, ModalOverlay, ModalContent, Text, ModalHeader, ModalCloseButton, ModalBody, Input, ModalFooter, Button } from "@chakra-ui/react"
 import { useForm } from "react-hook-form"
-import { Trip } from "src/api"
+import { Activity } from "src/api"
 import DestinationInput from "src/ui/DestinationInput"
 
-interface NewTripDialogProps {
+interface NewActivityDialogProps {
     onClose: () => void
-    onCreateTrip: (trip: Trip) => void
+    onCreateActivity: (activity: Activity) => void
 }
 
-export default function NewTripDialog(props: NewTripDialogProps) {
-    const { register, setValue, watch } = useForm<Trip>()
+export default function NewActivityDialog(props: NewActivityDialogProps) {
+    const { register, setValue, getValues } = useForm<Activity>()
 
     return (
         <Modal isOpen={true} onClose={props.onClose} isCentered={true}>
             <ModalOverlay />
             <ModalContent>
-                <ModalHeader>New Trip</ModalHeader>
+                <ModalHeader>New Activity</ModalHeader>
                 <ModalCloseButton />
 
                 <ModalBody>
@@ -25,15 +25,15 @@ export default function NewTripDialog(props: NewTripDialogProps) {
                     <Text marginTop='16px'>Destination:</Text>
                     <DestinationInput onAddLocation={(destination) => setValue('destination', destination)} placeholder='' />
 
-                    <Text marginTop='16px'>Start Date:</Text>
-                    <Input type='date' {...register('startDate')} />
+                    <Text marginTop='16px'>Start Time:</Text>
+                    <Input type='time' {...register('startTime')} />
 
-                    <Text marginTop='16px'>End Date:</Text>
-                    <Input type='date' {...register('endDate')} />
+                    <Text marginTop='16px'>End Time:</Text>
+                    <Input type='time' {...register('endTime')} />
                 </ModalBody>
 
                 <ModalFooter>
-                    <Button colorScheme='blue' onClick={() => props.onCreateTrip(watch())}>
+                    <Button colorScheme='blue' onClick={() => props.onCreateActivity(getValues())}>
                         Done
                     </Button>
 

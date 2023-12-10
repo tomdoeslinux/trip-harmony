@@ -1,9 +1,9 @@
 import { TileLayer, Marker, Popup, MapContainer } from "react-leaflet"
-import { Location } from "src/api"
+import { Destination } from "src/api"
 
 interface MapProps {
-    startingLocation: Location
-    locations: Location[]
+    startingLocation: Destination
+    destinations: Destination[]
 }
 
 export default function Map(props: MapProps) {
@@ -19,7 +19,7 @@ export default function Map(props: MapProps) {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
 
-            {props.locations.map((location, index) => (
+            {props.destinations.map((location, index) => (
                 <Marker key={index} position={[location.lat, location.lon]}>
                     <Popup>
                         {location.name}

@@ -1,6 +1,5 @@
 import { Flex, Box } from "@chakra-ui/react"
 import { Trip } from "src/api"
-import { _Trip } from "src/trip"
 
 interface TripCardProps {
     trip: Trip

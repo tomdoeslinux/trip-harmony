@@ -1,8 +1,7 @@
 import { Box, Grid, GridItem, Heading } from '@chakra-ui/react'
-import { _Trip, _Location } from '../../trip'
 import { useEffect, useState } from 'react'
-import { API, Trip, Location, TripDay } from 'src/api'
-import TripDayComponent from 'src/pages/trip-page/components/TripDay'
+import { API, Trip } from 'src/api'
+import DayItem from 'src/pages/trip-page/components/DayItem'
 import Map from 'src/pages/trip-page/components/Map'
 
 interface TripPageProps {
@@ -12,21 +11,9 @@ interface TripPageProps {
 export default function TripPage(props: TripPageProps) {
     const [trip, setTrip] = useState<Trip | null>(null)
 
-    console.log(trip)
-
     async function fetchTrip() {
         const trip: Trip = await API.getTripById(props.tripId)
         setTrip(trip)
-    }
-
-    async function addLocationHandler(tripDayId: number, location: Location) {
-        await API.addLocationToTripDay(tripDayId, location)
-        await fetchTrip()
-    }
-
-    async function deleteLocationHandler(tripDayLocationId: number) {
-        await API.deleteLocationFromTripDay(tripDayLocationId)
-        await fetchTrip()
     }
 
     useEffect(() => {
@@ -43,19 +30,19 @@ export default function TripPage(props: TripPageProps) {
                 flexDirection='column'
             >
                 {trip && <Heading as='h1'>{trip.name}</Heading>}
-                {trip && trip.tripDays.map((tripDay, index) => (
-                    <TripDayComponent
-                        key={index}
-                        tripDay={tripDay}
-                        onDeleteLocation={(location) => deleteLocationHandler(location.id)}
-                        onAddLocation={(location) => addLocationHandler(tripDay.id, location)}
-                    />
+                {trip && trip.days.map((day, index) => (
+                    <DayItem key={index} day={day} />
                 ))}
             </GridItem>
 
             <GridItem position='relative' gridColumn={2} background='gray'>
                 <Box position='fixed' width='100%' height='100%'>
-                    {trip && <Map startingLocation={trip.destination} locations={trip.tripDays.map((tripDay) => tripDay.locations).flat()} />}
+                    {trip && (
+                        <Map 
+                            startingLocation={trip.destination} 
+                            destinations={trip.days.map((tripDay) => tripDay.activities.map((activity) => activity.destination)).flat()} 
+                        />
+                    )}
                 </Box>
             </GridItem>
         </Grid>

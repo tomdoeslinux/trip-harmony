@@ -1,11 +1,10 @@
-import { Box, Button, Flex, Grid, Heading, useMediaQuery } from "@chakra-ui/react";
+import { Button, Flex, Grid, Heading, useMediaQuery } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { MdAdd } from "react-icons/md";
 import { API, Trip, User } from "src/api";
 import Header from "src/pages/home-page/components/Header";
 import NewTripDialog from "src/pages/home-page/components/NewTripDialog";
 import TripCard from "src/pages/home-page/components/TripCard";
-import { TripCtor } from "src/trip";
 import { useLocation } from "wouter";
 
 export const HEADER_HEIGHT = '70px'

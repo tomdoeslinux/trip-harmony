@@ -5,32 +5,39 @@ export interface User {
     password: string
 }
 
-export interface Location {
-    id: number
+export interface Destination {
     name: string
     lat: number
     lon: number
 }
 
-export interface TripDay {
+export interface Activity {
+    id: number
+    name: string
+    destination: Destination
+    startTime?: string
+    endTime?: string
+}
+
+export interface Day {
     id: number
     date: string
-    locations: Location[]
+    activities: Activity[]
 }
 
 export interface Trip {
     id: number
-    destination: Location
+    destination: Destination
     name: string
     startDate: string
     endDate: string
-    tripDays: TripDay[]
+    days: Day[]
 }
 
 export class API {
     private constructor() { }
 
-    private static readonly LOGGED_IN_USER_KEY = 'cur_user'
+    private static readonly LOGGED_IN_USER_KEY = 'logged_in_user'
 
     static login(user: User) {
         localStorage.setItem(API.LOGGED_IN_USER_KEY, JSON.stringify(user))
@@ -49,6 +56,19 @@ export class API {
         return JSON.parse(localStorage.getItem(API.LOGGED_IN_USER_KEY)!) as User
     }
 
+    static async createUser(user: User): Promise<User> {
+        const response = await fetch('http://localhost:8080/api/users', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(user)
+        })
+        const createdUser = await response.json()
+
+        return createdUser
+    }
+
     static async getTrips(userId: number): Promise<Trip[]> {
         const response = await fetch(`http://localhost:8080/api/users/${userId}/trips`, {
             method: 'GET'
@@ -57,8 +77,8 @@ export class API {
         return trips
     }
 
-    static async getTripById(tripId: number): Promise<Trip> {
-        const response = await fetch(`http://localhost:8080/api/trips/${tripId}`, { 
+    static async getTripById(id: number): Promise<Trip> {
+        const response = await fetch(`http://localhost:8080/api/trips/${id}`, { 
             method: 'GET'
         })
         const trip: Trip = await response.json()
@@ -78,32 +98,29 @@ export class API {
         return createdTrip
     }
 
-    static async createUser(user: User): Promise<User> {
-        const response = await fetch('http://localhost:8080/api/users', {
+    static async addActivity(dayId: number, activity: Activity): Promise<void> {
+        await fetch(`http://localhost:8080/api/days/${dayId}/activities`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(user)
-        })
-        const createdUser = await response.json()
-
-        return createdUser
-    }
-
-    static async addLocationToTripDay(tripDayId: number, location: Location): Promise<void> {
-        await fetch(`http://localhost:8080/api/trip-days/${tripDayId}/locations`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(location)
+            body: JSON.stringify(activity)
         })
     }
 
-    static async deleteLocationFromTripDay(tripDayLocationId: number): Promise<void> {
-        await fetch(`http://localhost:8080/api/trip-day-locations/${tripDayLocationId}`, {
+    static async deleteActivity(id: number): Promise<void> {
+        await fetch(`http://localhost:8080/api/activities/${id}`, {
             method: 'DELETE'
+        })
+    }
+
+    static async updateActivityTimes(id: number, newStartTime: string, newEndTime: string) {
+        await fetch(`http://localhost:8080/api/activities/${id}/times`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ startTime: newStartTime, endTime: newEndTime })
         })
     }
 }
