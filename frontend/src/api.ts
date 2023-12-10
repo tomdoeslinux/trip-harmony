@@ -1,3 +1,5 @@
+import { buildUrl } from "src/util"
+
 export interface User {
     id: number
     username: string
@@ -128,7 +130,7 @@ export class API {
         })
     }
 
-    static async updateActivityTimes(id: number, newStartTime: string, newEndTime: string) {
+    static async updateActivityTimes(id: number, newStartTime: string, newEndTime: string): Promise<void> {
         await fetch(`http://localhost:8080/api/activities/${id}/times`, {
             method: 'PUT',
             headers: {
@@ -136,5 +138,22 @@ export class API {
             },
             body: JSON.stringify({ startTime: newStartTime, endTime: newEndTime })
         })
+    }
+
+    static async nomatim_getSuggestedDestinations(searchInput: string): Promise<Destination[]> {
+        const url: URL = buildUrl('https://nominatim.openstreetmap.org/search', { q: searchInput, format: 'json' })
+
+        const response = await fetch(url, { 
+            headers: { 'User-Agent': 'todoescode@gmail.com' } 
+        })
+        const data: any[] = await response.json()
+
+        const destinations: Destination[] = data.map((item) => ({
+            name: item.display_name,
+            lat: Number(item.lat),
+            lon: Number(item.lon)
+        }))
+
+        return destinations
     }
 }

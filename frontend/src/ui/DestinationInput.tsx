@@ -4,7 +4,7 @@ import { useState, useCallback, useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { buildUrl } from "src/util"
 import Autocomplete from "src/ui/Autocomplete"
-import { Destination } from "src/api"
+import { API, Destination } from "src/api"
 
 type DestinationInputProps = {
     onAddLocation: (location: Destination) => void
@@ -20,18 +20,7 @@ export default function DestinationInput({ onAddLocation, ...props }: Destinatio
         if (searchInput?.trim().length > 0) {
             setIsLoadingSuggestedLocations(true)
 
-            const url: URL = buildUrl('https://nominatim.openstreetmap.org/search', { q: searchInput, format: 'json' })
-
-            const response = await fetch(url, {
-                headers: { 'User-Agent': 'todoescode@gmail.com' }
-            })
-            const data: any[] = await response.json()
-
-            const destinations: Destination[] = data.map((item) => ({
-                name: item.display_name,
-                lat: Number(item.lat),
-                lon: Number(item.lon)
-            }))
+            const destinations: Destination[] = await API.nomatim_getSuggestedDestinations(searchInput)
 
             setSuggestedDestinations(destinations)
             setIsLoadingSuggestedLocations(false)
