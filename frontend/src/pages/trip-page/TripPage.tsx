@@ -1,53 +1,10 @@
-import { Box, Flex, Text, Grid, GridItem, Heading, Spinner } from '@chakra-ui/react'
+import { Box, Flex, Text, Grid, GridItem } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
-import { MdLocationPin } from 'react-icons/md'
 import { API, Trip } from 'src/api'
 import DayItem from 'src/pages/trip-page/components/DayItem'
 import Map from 'src/pages/trip-page/components/Map'
-
-interface TripHeaderProps {
-    trip: Trip
-}
-
-function TripHeader(props: TripHeaderProps) {
-    const imgPath = API.getImgPath(props.trip.photo)
-
-    return (
-        <Flex
-            width='100%'
-            backgroundImage={imgPath}
-            backgroundSize='cover'
-            height='400px'
-        >
-            <Flex
-                width='100%'
-                padding='32px'
-                background='linear-gradient(to bottom, transparent 50%, black 100%)'
-            >
-                <Flex
-                    marginTop='auto'
-                    color='white'
-                    flexDirection='column'
-                    gap='8px'
-                >
-                    <Flex gap='8px' alignItems='center'>
-                        <MdLocationPin />
-                        <Text>{props.trip.destination.name}</Text>
-                    </Flex>
-                    <Heading marginTop='auto' as='h1'>{props.trip.name}</Heading>
-                </Flex>
-            </Flex>
-        </Flex>
-    )
-}
-
-function TripLoading() {
-    return (
-        <Flex width='100vw' height='100vh' alignItems='center' justifyContent='center'>
-            <Spinner />
-        </Flex>
-    )
-}
+import TripHeader from 'src/pages/trip-page/components/TripHeader'
+import TripLoading from 'src/pages/trip-page/components/TripLoading'
 
 interface TripPageProps {
     tripId: number

@@ -2,7 +2,6 @@ import { Flex, IconButton, Box, Button, Text } from "@chakra-ui/react"
 import { MdAccessTime, MdDelete, MdLocationPin, MdSyncLock } from 'react-icons/md'
 import { API, Activity } from "src/api"
 import EditActivityTimes from "src/pages/trip-page/components/EditActivityTimes"
-import EditActivityTiimes from "src/pages/trip-page/components/EditActivityTimes"
 
 interface ActivityCardProps {
     activity: Activity

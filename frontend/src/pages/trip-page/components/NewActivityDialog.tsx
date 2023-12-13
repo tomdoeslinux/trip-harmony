@@ -1,7 +1,8 @@
-import { Modal, ModalOverlay, ModalContent, Text, ModalHeader, ModalCloseButton, ModalBody, Input, ModalFooter, Button } from "@chakra-ui/react"
+import { Input, FormControl, FormLabel } from "@chakra-ui/react"
 import { useForm } from "react-hook-form"
 import { Activity } from "src/api"
 import DestinationInput from "src/ui/DestinationInput"
+import SimpleFormModal from "src/ui/SimpleFormModal"
 
 interface NewActivityDialogProps {
     onClose: () => void
@@ -9,37 +10,29 @@ interface NewActivityDialogProps {
 }
 
 export default function NewActivityDialog(props: NewActivityDialogProps) {
-    const { register, setValue, getValues } = useForm<Activity>()
+    const { register, setValue, handleSubmit } = useForm<Activity>()
 
     return (
-        <Modal isOpen={true} onClose={props.onClose} isCentered={true}>
-            <ModalOverlay />
-            <ModalContent>
-                <ModalHeader>New Activity</ModalHeader>
-                <ModalCloseButton />
+        <SimpleFormModal header='New Activity' onClose={props.onClose} onFormSubmit={handleSubmit(props.onCreateActivity)}>
+            <FormControl>
+                <FormLabel>Name</FormLabel>
+                <Input {...register('name')} />
+            </FormControl>
 
-                <ModalBody>
-                    <Text>Name:</Text>
-                    <Input {...register('name')} />
+            <FormControl>
+                <FormLabel marginTop='16px'>Destination</FormLabel>
+                <DestinationInput onAddLocation={(destination) => setValue('destination', destination)} placeholder='' />
+            </FormControl>
 
-                    <Text marginTop='16px'>Destination:</Text>
-                    <DestinationInput onAddLocation={(destination) => setValue('destination', destination)} placeholder='' />
+            <FormControl>
+                <FormLabel marginTop='16px'>Start Time</FormLabel>
+                <Input type='time' {...register('startTime')} />
+            </FormControl>
 
-                    <Text marginTop='16px'>Start Time:</Text>
-                    <Input type='time' {...register('startTime')} />
-
-                    <Text marginTop='16px'>End Time:</Text>
-                    <Input type='time' {...register('endTime')} />
-                </ModalBody>
-
-                <ModalFooter>
-                    <Button colorScheme='blue' onClick={() => props.onCreateActivity(getValues())}>
-                        Done
-                    </Button>
-
-                    <Button variant='ghost' onClick={props.onClose}>Cancel</Button>
-                </ModalFooter>
-            </ModalContent>
-        </Modal>
+            <FormControl>
+                <FormLabel marginTop='16px'>End Time</FormLabel>
+                <Input type='time' {...register('endTime')} />
+            </FormControl>
+        </SimpleFormModal>
     )
 }
