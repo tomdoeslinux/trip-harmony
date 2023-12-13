@@ -1,7 +1,7 @@
-import { Button, Flex, Grid, Heading, useMediaQuery } from "@chakra-ui/react";
+import { Button, Flex, Grid, Heading } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { MdAdd } from "react-icons/md";
-import { API, Trip, User } from "src/api";
+import { API, NewTrip, Trip, User } from "src/api";
 import Header from "src/pages/home-page/components/Header";
 import NewTripDialog from "src/pages/home-page/components/NewTripDialog";
 import TripCard from "src/pages/home-page/components/TripCard";
@@ -32,9 +32,8 @@ export default function HomePage() {
         init()
     }, [])
 
-    async function createTrip(trip: Trip): Promise<void> {
+    async function createTrip(trip: NewTrip): Promise<void> {
         if (user) {
-            console.log('created trip ' + JSON.stringify(trip))
             setShowNewTripDialog(false)
             const createdTrip: Trip = await API.addTrip(user.id, trip)
             setLocation(`/trips/${createdTrip.id}`)

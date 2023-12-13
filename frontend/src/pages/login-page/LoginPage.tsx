@@ -1,4 +1,4 @@
-import { Flex, Text, Heading, Input, Button } from "@chakra-ui/react";
+import { Flex, Text, Heading, Input, Button, FormLabel, FormControl } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { API, LoginParam } from "src/api";
 import { Link, useLocation } from "wouter";
@@ -15,11 +15,7 @@ export default function LoginPage() {
     }
 
     return (
-        <Flex
-            flexDirection='column'
-            background='gray.100'
-            height='100vh'
-        >
+        <Flex flexDirection='column' background='gray.100' height='100vh'>
             <Flex height='100%' alignItems='center' justifyContent='center'>
                 <Flex 
                     as='form' 
@@ -27,17 +23,23 @@ export default function LoginPage() {
                     margin='32px' 
                     flexDirection='column'
                     width={PAGE_WIDTH}
+                    gap='16px'
                 >
                     <Heading as='h1' alignSelf='center'>Login</Heading>
-                    <Text marginTop='16px'>Username</Text>
-                    <Input marginTop='4px' background='white' {...register('username')} />
 
-                    <Text marginTop='16px'>Password</Text>
-                    <Input type='password' marginTop='4px' background='white' {...register('password')} />
+                    <FormControl>
+                        <FormLabel>Username</FormLabel>
+                        <Input background='white' {...register('username')} />
+                    </FormControl>
 
-                    <Button marginTop='16px' colorScheme='blue' type='submit'>Login</Button>
+                    <FormControl>
+                        <FormLabel>Password</FormLabel>
+                        <Input type='password' background='white' {...register('password')} />
+                    </FormControl>
 
-                    <Text marginTop='16px' textAlign='center'>Don't have an account? <Link href='/register' color='blue'>Register</Link></Text>
+                    <Button colorScheme='blue' type='submit'>Login</Button>
+
+                    <Text textAlign='center'>Don't have an account? <Link href='/register' color='blue'>Register</Link></Text>
                 </Flex>
             </Flex>
         </Flex>

@@ -29,12 +29,15 @@ export interface Day {
 
 export interface Trip {
     id: number
+    photo: string
     destination: Destination
     name: string
     startDate: string
     endDate: string
     days: Day[]
 }
+
+export type NewTrip = Pick<Trip, 'name' | 'destination' | 'startDate' | 'endDate'> & { file?: any }
 
 export interface LoginParam {
     username: string
@@ -103,13 +106,20 @@ export class API {
         return trip
     }
 
-    static async addTrip(userId: number, trip: Trip): Promise<Trip> {
+    static async addTrip(userId: number, trip: NewTrip): Promise<Trip> {
+        const formData = new FormData()
+
+        console.log(trip.file)
+
+        formData.append('file', trip.file![0])
+        delete trip.file
+        formData.append('trip', new Blob([JSON.stringify(trip)], { type: 'application/json' }))
+
         const response = await fetch(`http://localhost:8080/api/users/${userId}/trips`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(trip)
+            body: formData
         })
-        const createdTrip = await response.json()
+        const createdTrip: Trip = await response.json()
 
         return createdTrip
     }
@@ -138,6 +148,10 @@ export class API {
             },
             body: JSON.stringify({ startTime: newStartTime, endTime: newEndTime })
         })
+    }
+
+    static getImgPath(fileName: string): string {
+        return `http://localhost:8080/i/${fileName}`
     }
 
     static async nomatim_getSuggestedDestinations(searchInput: string): Promise<Destination[]> {

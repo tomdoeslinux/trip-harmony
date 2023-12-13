@@ -1,18 +1,17 @@
 package com.example.backend.controllers;
 
-import com.example.backend.controllers.dtos.UserLoginDTO;
+import com.example.backend.controllers.dtos.trip.NewTripDTO;
+import com.example.backend.controllers.dtos.user.RegisterUserDTO;
+import com.example.backend.controllers.dtos.user.LoginUserDTO;
 import com.example.backend.domain.Trip;
 import com.example.backend.domain.User;
 import com.example.backend.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -34,22 +33,26 @@ public class UserController {
         return ResponseEntity.ok(trips);
     }
 
-    @PostMapping("/{id}/trips")
-    public ResponseEntity<Trip> addTrip(@PathVariable Long id, @RequestBody Trip trip) {
-        Trip createdTrip = userService.addTrip(id, trip);
+    @PostMapping(value = "/{id}/trips", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    public ResponseEntity<Trip> newTrip(
+        @PathVariable Long id,
+        @RequestPart("trip") NewTripDTO dto,
+        @RequestPart("file") MultipartFile multipartFile
+    ) {
+        Trip trip = userService.newTrip(id, dto, multipartFile);
 
-        return ResponseEntity.ok(createdTrip);
+        return ResponseEntity.ok(trip);
     }
 
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        User newUser = userService.register(user);
+    public ResponseEntity<User> register(@RequestBody RegisterUserDTO dto) {
+        User newUser = userService.register(dto);
 
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> login(@RequestBody UserLoginDTO dto) {
+    public ResponseEntity<User> login(@RequestBody LoginUserDTO dto) {
         User user = userService.login(dto);
 
         return ResponseEntity.ok(user);

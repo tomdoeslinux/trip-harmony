@@ -9,14 +9,19 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler({ UserNotFoundException.class, TripNotFoundException.class, DayNotFoundException.class })
+    @ExceptionHandler({
+        UserNotFoundException.class,
+        TripNotFoundException.class,
+        DayNotFoundException.class,
+        ActivityNotFoundException.class
+    })
     public ResponseEntity<?> handleEntityNotFoundException() {
         return ResponseEntity.notFound().build();
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleException(Exception exception) {
-        log.warn("Exception encountered " + exception.getMessage());
+        log.warn("Exception encountered (" + exception.getClass().getName() + ") " + exception.getMessage());
         return ResponseEntity.internalServerError().build();
     }
 }

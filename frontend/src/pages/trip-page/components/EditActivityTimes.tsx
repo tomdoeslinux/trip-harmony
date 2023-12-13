@@ -1,20 +1,32 @@
-import { Popover, PopoverTrigger, Text, Input, PopoverContent, PopoverArrow, PopoverCloseButton, PopoverBody, IconButton, Button } from "@chakra-ui/react";
+import { Popover, PopoverTrigger, Text, Input, PopoverContent, PopoverArrow, PopoverCloseButton, PopoverBody, IconButton, Button, useStatStyles } from "@chakra-ui/react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { MdAccessTime } from "react-icons/md";
+import { API, Activity } from "src/api";
+
+type ActivityTimes = Pick<Activity, 'startTime' | 'endTime'>
 
 interface EditActivityTimesProps {
-    defaultStartTime?: string
-    defaultEndTime?: string
-    onUpdateTimes: (newStartTime: string, newEndTime: string) => void
+    activity: Activity
 }
 
 export default function EditActivityTimes(props: EditActivityTimesProps) {
-    const { register, getValues } = useForm<{ startTime?: string, endTime?: string }>({ 
-        defaultValues: { startTime: props.defaultStartTime, endTime: props.defaultEndTime } 
+    const [isOpen, setIsOpen] = useState(false)
+    const { register, handleSubmit } = useForm<Pick<Activity, 'startTime' | 'endTime'>>({ 
+        defaultValues: { startTime: props.activity.startTime, endTime: props.activity.endTime } 
     })
 
+    function submitHandler(times: ActivityTimes) {
+        API.updateActivityTimes(props.activity.id, times.startTime!, times.endTime!)
+        setIsOpen(false)
+    }
+
     return (
-        <Popover>
+        <Popover 
+            isOpen={isOpen}
+            onOpen={() => setIsOpen(true)}
+            onClose={() => setIsOpen(false)}
+        >
             <PopoverTrigger>
                 <IconButton aria-label='Set times' variant='ghost'>
                     <MdAccessTime />
@@ -23,14 +35,14 @@ export default function EditActivityTimes(props: EditActivityTimesProps) {
             <PopoverContent>
                 <PopoverArrow />
                 <PopoverCloseButton />
-                <PopoverBody>
+                <PopoverBody as='form' onSubmit={handleSubmit(submitHandler)}>
                     <Text marginTop='16px'>Start Time:</Text>
-                    <Input type='time' {...register('startTime')} />
+                    <Input type='time' {...register('startTime', { required: true })} />
 
                     <Text marginTop='16px'>End Time:</Text>
-                    <Input type='time' {...register('endTime')} />
+                    <Input type='time' {...register('endTime', { required: true })} />
 
-                    <Button marginTop='16px' onClick={() => props.onUpdateTimes(getValues().startTime!, getValues().endTime!)}>Update Times</Button>
+                    <Button marginTop='16px' type='submit'>Update Times</Button>
                 </PopoverBody>
             </PopoverContent>
         </Popover>

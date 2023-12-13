@@ -32,6 +32,9 @@ public class Trip extends BaseEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @Column(name = "photo")
+    private String photo;
+
     @Column(name = "start_date", nullable = false)
     private LocalDate startDate;
 

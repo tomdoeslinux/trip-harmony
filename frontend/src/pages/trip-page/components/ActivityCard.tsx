@@ -15,6 +15,7 @@ export default function ActivityCard(props: ActivityCardProps) {
             gap='8px'
             padding='8px'
             borderRadius='8px'
+            height='80px'
             border='1px solid rgb(218, 220, 224)'
             _hover={{ shadow: 'md' }}
             cursor='pointer'
@@ -34,11 +35,7 @@ export default function ActivityCard(props: ActivityCardProps) {
                     <Text fontSize='small'>{props.activity.startTime} - {props.activity.endTime}</Text>
                 )}
 
-                <EditActivityTimes 
-                    defaultStartTime={props.activity.startTime} 
-                    defaultEndTime={props.activity.endTime} 
-                    onUpdateTimes={(newStartTime, newEndTime) => API.updateActivityTimes(props.activity.id, newStartTime, newEndTime)}
-                />
+                <EditActivityTimes activity={props.activity} />
 
                 <IconButton
                     aria-label='Delete'

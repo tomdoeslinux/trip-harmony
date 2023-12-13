@@ -1,5 +1,5 @@
 import { Flex, Box } from "@chakra-ui/react"
-import { Trip } from "src/api"
+import { API, Trip } from "src/api"
 
 interface TripCardProps {
     trip: Trip
@@ -20,8 +20,11 @@ export default function TripCard(props: TripCardProps) {
             minWidth='0px'
             onClick={() => props.onClick(props.trip.id)}
             _active={{ border: '1px solid darkblue' }}
+            backgroundImage={API.getImgPath(props.trip.photo)}
+            backgroundSize='cover' 
+            overflow='clip'
         >
-            <Box marginTop='auto' fontSize='lg' padding='16px'>
+            <Box marginTop='auto' background='white' fontSize='lg' padding='16px'>
                 {props.trip.name}
             </Box>
         </Flex>

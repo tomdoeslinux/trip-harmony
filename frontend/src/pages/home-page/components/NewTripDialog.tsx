@@ -1,39 +1,52 @@
-import { Modal, Text, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, Input, ModalFooter, Button } from "@chakra-ui/react"
+import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, Input, ModalFooter, Button, FormControl, FormLabel } from "@chakra-ui/react"
 import { useForm } from "react-hook-form"
-import { Trip } from "src/api"
+import { NewTrip } from "src/api"
 import DestinationInput from "src/ui/DestinationInput"
 
 interface NewTripDialogProps {
     onClose: () => void
-    onCreateTrip: (trip: Trip) => void
+    onCreateTrip: (trip: NewTrip) => void
 }
 
 export default function NewTripDialog(props: NewTripDialogProps) {
-    const { register, setValue, watch } = useForm<Trip>()
+    const { register, handleSubmit, setValue } = useForm<NewTrip>()
 
     return (
         <Modal isOpen={true} onClose={props.onClose} isCentered={true}>
             <ModalOverlay />
-            <ModalContent>
+            <ModalContent as='form' onSubmit={handleSubmit(props.onCreateTrip)}>
                 <ModalHeader>New Trip</ModalHeader>
                 <ModalCloseButton />
 
                 <ModalBody>
-                    <Text>Name:</Text>
-                    <Input {...register('name')} />
+                    <FormControl>
+                        <FormLabel>Name</FormLabel>
+                        <Input {...register('name')} />
+                    </FormControl>
 
-                    <Text marginTop='16px'>Destination:</Text>
-                    <DestinationInput onAddLocation={(destination) => setValue('destination', destination)} placeholder='' />
+                    <FormControl>
+                        <FormLabel>Upload Photo</FormLabel>
+                        <Input type='file' accept='image/png, image/jpeg' {...register('file')} />
+                    </FormControl>
+                    
+                    <FormControl>
+                        <FormLabel>Destination</FormLabel>
+                        <DestinationInput onAddLocation={(destination) => setValue('destination', destination)} placeholder='' />
+                    </FormControl>
 
-                    <Text marginTop='16px'>Start Date:</Text>
-                    <Input type='date' {...register('startDate')} />
+                    <FormControl>
+                        <FormLabel>Start Date</FormLabel>
+                        <Input type='date' {...register('startDate')} />
+                    </FormControl>
 
-                    <Text marginTop='16px'>End Date:</Text>
-                    <Input type='date' {...register('endDate')} />
+                    <FormControl>
+                        <FormLabel>End Date</FormLabel>
+                        <Input type='date' {...register('endDate')} />
+                    </FormControl>
                 </ModalBody>
 
                 <ModalFooter>
-                    <Button colorScheme='blue' onClick={() => props.onCreateTrip(watch())}>
+                    <Button type='submit' colorScheme='blue'>
                         Done
                     </Button>
 
