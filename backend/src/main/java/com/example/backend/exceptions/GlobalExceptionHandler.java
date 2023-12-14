@@ -21,7 +21,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleException(Exception exception) {
-        log.warn("Exception encountered (" + exception.getClass().getName() + ") " + exception.getMessage());
         return ResponseEntity.internalServerError().build();
     }
 }

@@ -16,8 +16,8 @@ export default function EditActivityTimes(props: EditActivityTimesProps) {
         defaultValues: { startTime: props.activity.startTime, endTime: props.activity.endTime } 
     })
 
-    function submitHandler(times: ActivityTimes) {
-        API.updateActivityTimes(props.activity.id, times.startTime!, times.endTime!)
+    async function submitHandler(times: ActivityTimes) {
+        await API.updateActivityTimes(props.activity.id, times.startTime!, times.endTime!)
         setIsOpen(false)
     }
 

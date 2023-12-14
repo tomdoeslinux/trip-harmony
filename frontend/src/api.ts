@@ -38,6 +38,7 @@ export interface Trip {
 }
 
 export type NewTrip = Pick<Trip, 'name' | 'destination' | 'startDate' | 'endDate'> & { file?: any }
+export type EditTrip = Pick<Trip, 'name' | 'startDate' | 'endDate' | 'destination'> 
 
 export interface LoginParam {
     username: string
@@ -109,8 +110,6 @@ export class API {
     static async addTrip(userId: number, trip: NewTrip): Promise<Trip> {
         const formData = new FormData()
 
-        console.log(trip.file)
-
         formData.append('file', trip.file![0])
         delete trip.file
         formData.append('trip', new Blob([JSON.stringify(trip)], { type: 'application/json' }))
@@ -122,6 +121,22 @@ export class API {
         const createdTrip: Trip = await response.json()
 
         return createdTrip
+    }
+
+    static async editTrip(id: number, editTrip: EditTrip): Promise<void> {
+        await fetch(`http://localhost:8080/api/trips/${id}`, {
+            method: 'PATCH', 
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(editTrip)
+        })
+    }
+
+    static async deleteTrip(id: number): Promise<void> {
+        await fetch(`http://localhost:8080/api/trips/${id}`, {
+            method: 'DELETE'
+        })
     }
 
     static async addActivity(dayId: number, activity: Activity): Promise<void> {

@@ -13,7 +13,11 @@ export default function NewTripDialog(props: NewTripDialogProps) {
     const { register, handleSubmit, setValue } = useForm<NewTrip>()
 
     return (
-        <SimpleFormModal header='New Trip' onClose={props.onClose} onFormSubmit={handleSubmit(props.onCreateTrip)}>
+        <SimpleFormModal 
+            header='New Trip' 
+            onClose={props.onClose} 
+            onFormSubmit={handleSubmit(props.onCreateTrip)}
+        >
             <FormControl>
                 <FormLabel>Name</FormLabel>
                 <Input {...register('name')} />

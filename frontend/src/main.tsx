@@ -18,11 +18,10 @@ const baseStyle = definePartsStyle({
         _hover: { shadow: 'md' },
         _active: { border: '1px solid darkblue' },
         transition: 'box-shadow 0.1s',
-        overflow: 'clip',
         border: '1px solid rgb(218, 220, 224)',
         shadow: '',
         printColorAdjust: 'exact', // To ensure that the card image is printable 
-        WebkitPrintColorAdjust: 'exact'// To ensure that the card image is printable 
+        WebkitPrintColorAdjust: 'exact'
     },
     header: {
         marginTop: 'auto',

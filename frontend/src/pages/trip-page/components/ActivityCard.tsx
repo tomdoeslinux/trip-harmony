@@ -35,7 +35,7 @@ export default function ActivityCard(props: ActivityCardProps) {
                 <IconButton
                     aria-label='Delete'
                     variant='ghost'
-                    onClick={() => API.deleteActivity(props.activity.id)}
+                    onClick={async () => await API.deleteActivity(props.activity.id)}
                 >
                     <MdDelete />
                 </IconButton>

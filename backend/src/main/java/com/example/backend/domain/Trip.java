@@ -15,6 +15,7 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -23,6 +24,8 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
+@ToString
+@Slf4j
 @Table(name = "trip")
 public class Trip extends BaseEntity {
 
@@ -51,7 +54,7 @@ public class Trip extends BaseEntity {
     private List<Day> days = new ArrayList<>();
 
     @PostPersist
-    private void generateDays() {
+    public void generateDays() {
         List<Day> newDays = new ArrayList<>();
         LocalDate currentDate = startDate;
 

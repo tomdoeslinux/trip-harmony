@@ -28,33 +28,29 @@ export default function TripPage(props: TripPageProps) {
 
             {trip && (
                 <Grid templateColumns='repeat(2, 1fr)' width='100%' height='100vh'>
-                    {trip && (
-                        <>
-                            <GridItem
-                                gridColumn={1}
-                                gap='8px'
-                                display='flex'
-                                flexDirection='column'
-                            >
-                                <TripHeader trip={trip} />
+                    <GridItem
+                        gridColumn={1}
+                        gap='8px'
+                        display='flex'
+                        flexDirection='column'
+                    >
+                        <TripHeader trip={trip} />
 
-                                <Flex padding='24px' flexDirection='column' gap='8px'>
-                                    {trip.days.map((day, index) => (
-                                        <DayItem key={index} day={day} />
-                                    ))}
-                                </Flex>
-                            </GridItem>
+                        <Flex padding='24px' flexDirection='column' gap='8px'>
+                            {trip.days.map((day, index) => (
+                                <DayItem key={index} day={day} />
+                            ))}
+                        </Flex>
+                    </GridItem>
 
-                            <GridItem position='relative' gridColumn={2} background='gray'>
-                                <Box position='fixed' width='100%' height='100%'>
-                                    <Map 
-                                        startingLocation={trip.destination} 
-                                        destinations={trip.days.map((tripDay) => tripDay.activities.map((activity) => activity.destination)).flat()} 
-                                    />
-                                </Box>
-                            </GridItem>
-                        </>
-                    )}
+                    <GridItem position='relative' gridColumn={2} background='gray'>
+                        <Box position='fixed' width='100%' height='100%'>
+                            <Map 
+                                startingLocation={trip.destination} 
+                                destinations={trip.days.map((tripDay) => tripDay.activities.map((activity) => activity.destination)).flat()} 
+                            />
+                        </Box>
+                    </GridItem>
                 </Grid>
             )}
         </>

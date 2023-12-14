@@ -63,8 +63,6 @@ public class UserService {
             throw new RuntimeException("Unable to process file: " + ex);
         }
 
-        log.warn(fileName);
-
         trip.setPhoto(fileName);
 
         return tripRepository.save(trip);
