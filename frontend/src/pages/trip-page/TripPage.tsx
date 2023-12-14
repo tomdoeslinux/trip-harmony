@@ -46,10 +46,12 @@ export default function TripPage(props: TripPageProps) {
                             </GridItem>
 
                             <GridItem position='relative' gridColumn={2} background='gray'>
-                                <Map 
-                                    startingLocation={trip.destination} 
-                                    destinations={trip.days.map((tripDay) => tripDay.activities.map((activity) => activity.destination)).flat()} 
-                                />
+                                <Box position='fixed' width='100%' height='100%'>
+                                    <Map 
+                                        startingLocation={trip.destination} 
+                                        destinations={trip.days.map((tripDay) => tripDay.activities.map((activity) => activity.destination)).flat()} 
+                                    />
+                                </Box>
                             </GridItem>
                         </>
                     )}
