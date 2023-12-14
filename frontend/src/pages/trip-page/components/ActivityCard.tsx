@@ -1,4 +1,4 @@
-import { Flex, IconButton, Box, Button, Text } from "@chakra-ui/react"
+import { Flex, IconButton, Box, Button, Text, Card } from "@chakra-ui/react"
 import { MdAccessTime, MdDelete, MdLocationPin, MdSyncLock } from 'react-icons/md'
 import { API, Activity } from "src/api"
 import EditActivityTimes from "src/pages/trip-page/components/EditActivityTimes"
@@ -9,16 +9,12 @@ interface ActivityCardProps {
 
 export default function ActivityCard(props: ActivityCardProps) {
     return (
-        <Flex
+        <Card
+            padding='8px'
+            flexDirection='row'
             alignItems='center'
             gap='8px'
-            padding='8px'
-            borderRadius='8px'
             height='80px'
-            border='1px solid rgb(218, 220, 224)'
-            _hover={{ shadow: 'md' }}
-            cursor='pointer'
-            _active={{ border: '1px solid darkblue' }}
         >
             <Box padding='12px' borderRadius='999px' background='lightblue' color='darkblue'>
                 <MdLocationPin size={18} />
@@ -45,6 +41,6 @@ export default function ActivityCard(props: ActivityCardProps) {
                 </IconButton>
             </Flex>
 
-        </Flex>
+        </Card>
     )
 }
