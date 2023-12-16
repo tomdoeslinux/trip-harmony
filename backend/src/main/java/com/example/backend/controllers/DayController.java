@@ -3,6 +3,7 @@ package com.example.backend.controllers;
 import com.example.backend.domain.Activity;
 import com.example.backend.services.DayService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,7 +22,7 @@ public class DayController {
     }
 
     @PostMapping("/{id}/activities")
-    public void addActivity(@PathVariable Long id, @RequestBody Activity activity) {
-        dayService.addActivity(id, activity);
+    public ResponseEntity<Activity> addActivity(@PathVariable Long id, @RequestBody Activity activity) {
+        return ResponseEntity.ok(dayService.addActivity(id, activity));
     }
 }

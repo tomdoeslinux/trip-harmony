@@ -15,8 +15,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 @Transactional
@@ -25,11 +31,13 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final TripRepository tripRepository;
+    private final UnsplashProxyService unsplashProxyService;
 
     @Autowired
-    public UserService(UserRepository userRepository, TripRepository tripRepository) {
+    public UserService(UserRepository userRepository, TripRepository tripRepository, UnsplashProxyService unsplashProxyService) {
         this.userRepository = userRepository;
         this.tripRepository = tripRepository;
+        this.unsplashProxyService = unsplashProxyService;
     }
 
     public User register(RegisterUserDTO dto) {
@@ -55,15 +63,44 @@ public class UserService {
         trip.setStartDate(dto.startDate());
         trip.setEndDate(dto.endDate());
 
-        String fileName = FileUtils.generateUniqueFileName(multipartFile);
+        if (multipartFile != null) {
+            String fileName = FileUtils.generateUniqueFileName(multipartFile);
 
-        try {
-            FileUtils.createFile(fileName, multipartFile);
-        } catch (IOException ex) {
-            throw new RuntimeException("Unable to process file: " + ex);
+            try {
+                FileUtils.createFile(fileName, multipartFile);
+            } catch (IOException ex) {
+                throw new RuntimeException("Unable to process file: " + ex);
+            }
+
+            trip.setPhoto(fileName);
+        } else {
+            List<URL> urls = unsplashProxyService.searchPhotos(dto.destination().getName());
+            int rand = ThreadLocalRandom.current().nextInt(0, urls.size() - 1);
+            URL randUrl = urls.get(rand);
+
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+            try (InputStream inputStream = randUrl.openStream()) {
+                byte[] chunk = new byte[4096];
+                int n;
+
+                while ((n = inputStream.read(chunk)) > 0) {
+                    byteArrayOutputStream.write(chunk, 0, n);
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            String fileName = UUID.randomUUID() + ".png";
+
+            try {
+                FileUtils.createFile(fileName, byteArrayOutputStream.toByteArray());
+            } catch (IOException ex) {
+                throw new RuntimeException("Unable to process file: " + ex);
+            }
+
+            trip.setPhoto(fileName);
         }
-
-        trip.setPhoto(fileName);
 
         return tripRepository.save(trip);
     }

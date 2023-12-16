@@ -75,7 +75,16 @@ export default function HomePage() {
                                 >Add New</Button>
                             </Flex>
 
-                            <Grid width='100%' gridTemplateColumns={{ base: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)', lg: 'repeat(4, 1fr)' }} gap='8px'>
+                            <Grid 
+                                width='100%' 
+                                gridTemplateColumns={{ 
+                                    base: 'repeat(1, 1fr)',
+                                    sm: 'repeat(2, 1fr)', 
+                                    md: 'repeat(3, 1fr)', 
+                                    lg: 'repeat(4, 1fr)' 
+                                }} 
+                                gap='8px'
+                            >
                                 {trips.map((trip, index) => (
                                     <TripCard
                                         trip={trip}

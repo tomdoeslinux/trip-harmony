@@ -37,7 +37,7 @@ export interface Trip {
     days: Day[]
 }
 
-export type NewTrip = Pick<Trip, 'name' | 'destination' | 'startDate' | 'endDate'> & { file?: any }
+export type NewTrip = Pick<Trip, 'name' | 'destination' | 'startDate' | 'endDate'> & { file?: any, unsplashPhotoUrl?: string }
 export type EditTrip = Pick<Trip, 'name' | 'startDate' | 'endDate' | 'destination'> 
 
 export interface LoginParam {
@@ -110,7 +110,9 @@ export class API {
     static async addTrip(userId: number, trip: NewTrip): Promise<Trip> {
         const formData = new FormData()
 
-        formData.append('file', trip.file![0])
+        if (trip.file) {
+            formData.append('file', trip.file![0])
+        }
         delete trip.file
         formData.append('trip', new Blob([JSON.stringify(trip)], { type: 'application/json' }))
 
@@ -177,6 +179,8 @@ export class API {
         })
         const data: any[] = await response.json()
 
+        console.log(data)
+
         const destinations: Destination[] = data.map((item) => ({
             name: item.display_name,
             lat: Number(item.lat),
@@ -184,5 +188,14 @@ export class API {
         }))
 
         return destinations
+    }
+
+    static async unsplash_search(query: string): Promise<string[]> {
+        const url: URL = buildUrl(`http://localhost:8080/api/unsplash-proxy/search/photos`, { query: query })
+       
+        const response = await fetch(url)
+        const photos: string[] = await response.json()
+
+        return photos
     }
 }

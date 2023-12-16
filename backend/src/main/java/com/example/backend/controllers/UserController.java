@@ -37,7 +37,7 @@ public class UserController {
     public ResponseEntity<Trip> newTrip(
         @PathVariable Long id,
         @RequestPart("trip") NewTripDTO dto,
-        @RequestPart("file") MultipartFile multipartFile
+        @RequestPart(value = "file", required = false) MultipartFile multipartFile
     ) {
         Trip trip = userService.newTrip(id, dto, multipartFile);
 
