@@ -2,7 +2,6 @@ import { Flex, InputProps } from "@chakra-ui/react"
 import debounce from "lodash.debounce"
 import { useState, useCallback, useEffect } from "react"
 import { useForm } from "react-hook-form"
-import { buildUrl } from "src/util"
 import Autocomplete from "src/ui/Autocomplete"
 import { API, Destination } from "src/api"
 

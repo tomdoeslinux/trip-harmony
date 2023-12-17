@@ -25,6 +25,7 @@ export interface Day {
     id: number
     date: string
     activities: Activity[]
+    notes: Note[]
 }
 
 export interface Trip {
@@ -39,6 +40,11 @@ export interface Trip {
 
 export type NewTrip = Pick<Trip, 'name' | 'destination' | 'startDate' | 'endDate'> & { file?: any, unsplashPhotoUrl?: string }
 export type EditTrip = Pick<Trip, 'name' | 'startDate' | 'endDate' | 'destination'> 
+
+export interface Note {
+    id: number
+    text: string
+}
 
 export interface LoginParam {
     username: string
@@ -167,6 +173,16 @@ export class API {
         })
     }
 
+    static async addNote(dayId: number, note: Note): Promise<void> {
+        await fetch(`http://localhost:8080/api/days/${dayId}/notes`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(note)
+        })
+    }
+
     static getImgPath(fileName: string): string {
         return `http://localhost:8080/i/${fileName}`
     }
@@ -178,8 +194,6 @@ export class API {
             headers: { 'User-Agent': 'todoescode@gmail.com' } 
         })
         const data: any[] = await response.json()
-
-        console.log(data)
 
         const destinations: Destination[] = data.map((item) => ({
             name: item.display_name,

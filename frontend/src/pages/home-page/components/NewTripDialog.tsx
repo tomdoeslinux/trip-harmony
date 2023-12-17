@@ -2,7 +2,6 @@ import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, Modal
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { NewTrip } from "src/api"
-import TripPhotoSuggestions from "src/pages/home-page/components/TripPhotoSuggestions"
 import DestinationInput from "src/ui/DestinationInput"
 import SimpleFormModal from "src/ui/SimpleFormModal"
 

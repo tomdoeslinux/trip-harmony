@@ -30,6 +30,9 @@ public class Day extends BaseEntity {
     @OneToMany(mappedBy = "day", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Activity> activities = new ArrayList<>();
 
+    @OneToMany(mappedBy = "day", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Note> notes = new ArrayList<>();
+
     @JsonIgnore
     @ToString.Exclude
     @ManyToOne

@@ -40,7 +40,6 @@ export default function ActivityCard(props: ActivityCardProps) {
                     <MdDelete />
                 </IconButton>
             </Flex>
-
         </Card>
     )
 }
