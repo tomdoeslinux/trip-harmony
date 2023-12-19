@@ -1,12 +1,11 @@
 package com.example.backend.services;
 
 import com.example.backend.FileUtils;
-import com.example.backend.controllers.dtos.trip.NewTripDTO;
-import com.example.backend.controllers.dtos.user.LoginUserDTO;
-import com.example.backend.controllers.dtos.user.RegisterUserDTO;
+import com.example.backend.controllers.dtos.NewTripDTO;
+import com.example.backend.controllers.dtos.LoginUserDTO;
+import com.example.backend.controllers.dtos.RegisterUserDTO;
 import com.example.backend.domain.Trip;
 import com.example.backend.domain.User;
-import com.example.backend.exceptions.UserNotFoundException;
 import com.example.backend.repository.TripRepository;
 import com.example.backend.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -19,8 +18,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -106,16 +105,16 @@ public class UserService {
     }
 
     public User login(LoginUserDTO dto) {
-        User user = userRepository.findByUsername(dto.username()).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findByUsername(dto.username()).orElseThrow();
 
         if (dto.password().equals(user.getPassword())) {
             return user;
         }
 
-        throw new UserNotFoundException();
+        throw new NoSuchElementException();
     }
 
     private User getUserById(Long userId) {
-        return userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        return userRepository.findById(userId).orElseThrow();
     }
 }

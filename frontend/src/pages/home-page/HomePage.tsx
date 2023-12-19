@@ -85,10 +85,10 @@ export default function HomePage() {
                                 }} 
                                 gap='8px'
                             >
-                                {trips.map((trip, index) => (
+                                {trips.map((trip) => (
                                     <TripCard
                                         trip={trip}
-                                        key={index}
+                                        key={trip.id}
                                         onClick={(tripId) => setLocation(`/trips/${tripId}`)}
                                     />
                                 ))}

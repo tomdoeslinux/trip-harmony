@@ -5,23 +5,20 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.NoSuchElementException;
+
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler({
-        UserNotFoundException.class,
-        TripNotFoundException.class,
-        DayNotFoundException.class,
-        ActivityNotFoundException.class
-    })
+    @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<?> handleEntityNotFoundException() {
         return ResponseEntity.notFound().build();
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleException(Exception exception) {
-        log.warn(exception.getMessage());
+        log.warn("Exception encountered: " + exception.getMessage());
         return ResponseEntity.internalServerError().build();
     }
 }

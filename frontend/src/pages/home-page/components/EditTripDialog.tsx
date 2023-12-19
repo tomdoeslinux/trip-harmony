@@ -1,17 +1,17 @@
 import { FormControl, FormLabel, Input } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
-import { EditTrip, NewTrip, Trip } from "src/api";
+import { UpdateTrip, NewTrip, Trip } from "src/api";
 import DestinationInput from "src/ui/DestinationInput";
 import SimpleFormModal from "src/ui/SimpleFormModal";
 
 interface EditTripDialogProps {
     trip: Trip
     onClose: () => void
-    onEditTrip: (trip: EditTrip) => void
+    onEditTrip: (trip: UpdateTrip) => void
 }
 
 export default function EditTripDialog(props: EditTripDialogProps) {
-    const { handleSubmit, setValue, register } = useForm<EditTrip>({
+    const { handleSubmit, setValue, register } = useForm<UpdateTrip>({
         defaultValues: props.trip
     })
 

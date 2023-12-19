@@ -26,6 +26,7 @@ export interface Day {
     date: string
     activities: Activity[]
     notes: Note[]
+    checklists: Checklist[]
 }
 
 export interface Trip {
@@ -38,8 +39,20 @@ export interface Trip {
     days: Day[]
 }
 
-export type NewTrip = Pick<Trip, 'name' | 'destination' | 'startDate' | 'endDate'> & { file?: any, unsplashPhotoUrl?: string }
-export type EditTrip = Pick<Trip, 'name' | 'startDate' | 'endDate' | 'destination'> 
+export interface Checklist {
+    id: number
+    name: string
+    items: ChecklistItem[]
+}
+
+export interface ChecklistItem {
+    id: number
+    name: string
+    isChecked: boolean
+}
+
+export type NewTrip = Pick<Trip, 'name' | 'destination' | 'startDate' | 'endDate'> & { file?: any }
+export type UpdateTrip = Pick<Trip, 'name' | 'startDate' | 'endDate' | 'destination'> 
 
 export interface Note {
     id: number
@@ -131,13 +144,13 @@ export class API {
         return createdTrip
     }
 
-    static async editTrip(id: number, editTrip: EditTrip): Promise<void> {
+    static async updateTrip(id: number, updateTrip: UpdateTrip): Promise<void> {
         await fetch(`http://localhost:8080/api/trips/${id}`, {
             method: 'PATCH', 
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(editTrip)
+            body: JSON.stringify(updateTrip)
         })
     }
 
@@ -181,6 +194,36 @@ export class API {
             },
             body: JSON.stringify(note)
         })
+    }
+
+    static async addChecklist(dayId: number, checklist: Checklist): Promise<void> {
+        await fetch(`http://localhost:8080/api/days/${dayId}/checklists`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(checklist)
+        })
+    }
+
+    static async addChecklistItem(checklistId: number, checklistItem: ChecklistItem): Promise<void> {
+        await fetch(`http://localhost:8080/api/checklists/${checklistId}/items`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(checklistItem)
+        }) 
+    }
+
+    static async updateChecklistItem(id: number, patchObject: Partial<ChecklistItem>): Promise<void> {
+        await fetch(`http://localhost:8080/api/checklist-items/${id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(patchObject)
+        }) 
     }
 
     static getImgPath(fileName: string): string {

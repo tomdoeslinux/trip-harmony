@@ -37,8 +37,8 @@ export default function TripPage(props: TripPageProps) {
                         <TripHeader trip={trip} />
 
                         <Flex padding='24px' flexDirection='column' gap='8px'>
-                            {trip.days.map((day, index) => (
-                                <DayItem key={index} day={day} />
+                            {trip.days.map((day) => (
+                                <DayItem key={day.id} day={day} />
                             ))}
                         </Flex>
                     </GridItem>

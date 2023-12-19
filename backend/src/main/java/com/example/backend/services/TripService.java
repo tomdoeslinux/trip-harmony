@@ -1,18 +1,13 @@
 package com.example.backend.services;
 
-import com.example.backend.controllers.dtos.trip.EditTripDTO;
+import com.example.backend.controllers.dtos.UpdateTripDTO;
 import com.example.backend.domain.Trip;
-import com.example.backend.exceptions.TripNotFoundException;
 import com.example.backend.repository.TripRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ReflectionUtils;
-
-import java.lang.reflect.Field;
-import java.util.Map;
 
 @Service
 @Transactional
@@ -29,10 +24,10 @@ public class TripService {
     }
 
     public Trip getTripById(Long id) {
-        return tripRepository.findById(id).orElseThrow(TripNotFoundException::new);
+        return tripRepository.findById(id).orElseThrow();
     }
 
-    public void editTrip(Long id, EditTripDTO dto) {
+    public void editTrip(Long id, UpdateTripDTO dto) {
         Trip trip = getTripById(id);
 
         try {

@@ -47,7 +47,7 @@ public class Trip extends BaseEntity {
     @JsonIgnore
     @ToString.Exclude
     @ManyToOne
-    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_user_id"))
+    @JoinColumn(name = "user_id")
     private User user;
 
     @OneToMany(mappedBy = "trip", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

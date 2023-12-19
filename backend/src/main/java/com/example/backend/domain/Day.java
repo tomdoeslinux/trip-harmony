@@ -33,9 +33,12 @@ public class Day extends BaseEntity {
     @OneToMany(mappedBy = "day", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Note> notes = new ArrayList<>();
 
+    @OneToMany(mappedBy = "day", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Checklist> checklists = new ArrayList<>();
+
     @JsonIgnore
     @ToString.Exclude
     @ManyToOne
-    @JoinColumn(name = "trip_id", foreignKey = @ForeignKey(name = "fk_trip_id"))
+    @JoinColumn(name = "trip_id")
     private Trip trip;
 }

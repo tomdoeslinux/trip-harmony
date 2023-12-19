@@ -2,7 +2,6 @@ package com.example.backend.services;
 
 import com.example.backend.controllers.dtos.UpdateActivityTimesDTO;
 import com.example.backend.domain.Activity;
-import com.example.backend.exceptions.ActivityNotFoundException;
 import com.example.backend.repository.ActivityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,6 +39,6 @@ public class ActivityService {
     }
 
     private Activity getActivityById(Long id) {
-        return activityRepository.findById(id).orElseThrow(ActivityNotFoundException::new);
+        return activityRepository.findById(id).orElseThrow();
     }
 }

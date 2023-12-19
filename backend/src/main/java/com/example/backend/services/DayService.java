@@ -1,10 +1,8 @@
 package com.example.backend.services;
 
-import com.example.backend.domain.Day;
-import com.example.backend.domain.Activity;
-import com.example.backend.domain.Note;
-import com.example.backend.exceptions.DayNotFoundException;
+import com.example.backend.domain.*;
 import com.example.backend.repository.ActivityRepository;
+import com.example.backend.repository.ChecklistRepository;
 import com.example.backend.repository.DayRepository;
 import com.example.backend.repository.NoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +18,19 @@ public class DayService {
 
     private final NoteRepository noteRepository;
 
+    private final ChecklistRepository checklistRepository;
+
     @Autowired
-    public DayService(DayRepository dayRepository, ActivityRepository activityRepository, NoteRepository noteRepository) {
+    public DayService(
+        DayRepository dayRepository,
+        ActivityRepository activityRepository,
+        NoteRepository noteRepository,
+        ChecklistRepository checklistRepository
+    ) {
         this.dayRepository = dayRepository;
         this.activityRepository = activityRepository;
         this.noteRepository = noteRepository;
+        this.checklistRepository = checklistRepository;
     }
 
     public Activity addActivity(Long tripDayId, Activity location) {
@@ -41,7 +47,14 @@ public class DayService {
         return noteRepository.save(note);
     }
 
+    public Checklist addChecklist(Long dayId, Checklist checklist) {
+        Day day = getDayById(dayId);
+        checklist.setDay(day);
+
+        return checklistRepository.save(checklist);
+    }
+
     private Day getDayById(Long tripDayId) {
-        return dayRepository.findById(tripDayId).orElseThrow(DayNotFoundException::new);
+        return dayRepository.findById(tripDayId).orElseThrow();
     }
 }

@@ -1,6 +1,7 @@
 package com.example.backend.controllers;
 
 import com.example.backend.domain.Activity;
+import com.example.backend.domain.Checklist;
 import com.example.backend.domain.Note;
 import com.example.backend.services.DayService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,5 +31,10 @@ public class DayController {
     @PostMapping("/{id}/notes")
     public ResponseEntity<Note> addNote(@PathVariable Long id, @RequestBody Note note) {
         return ResponseEntity.ok(dayService.addNote(id, note));
+    }
+
+    @PostMapping("/{id}/checklists")
+    public ResponseEntity<Checklist> addChecklist(@PathVariable Long id, @RequestBody Checklist checklist) {
+        return ResponseEntity.ok(dayService.addChecklist(id, checklist));
     }
 }

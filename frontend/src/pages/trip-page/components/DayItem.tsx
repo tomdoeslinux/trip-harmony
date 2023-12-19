@@ -6,6 +6,8 @@ import { Day, API } from "src/api"
 import NewActivityDialog from "src/pages/trip-page/components/NewActivityDialog"
 import NewNoteDialog from "src/pages/trip-page/components/NewNoteDialog"
 import NoteCard from "src/pages/trip-page/components/NoteCard"
+import NewChecklistDialog from "src/pages/trip-page/components/NewChecklistDialog"
+import ChecklistCard from "src/pages/trip-page/components/ChecklistCard"
 
 interface DayItemProps {
     day: Day
@@ -15,6 +17,7 @@ export default function DayItem(props: DayItemProps) {
     const [isExpanded, setIsExpanded] = useState(false)
     const [showNewActivityDialog, setShowNewActivityDialog] = useState(false)
     const [showNewNoteDialog, setShowNewNoteDialog] = useState(false)
+    const [showNewChecklistDialog, setShowNewChecklistDialog] = useState(false)
 
     return (
         <Flex flexDirection='column'>
@@ -33,21 +36,30 @@ export default function DayItem(props: DayItemProps) {
 
                 <Button size='sm' variant='outline' onClick={() => setShowNewActivityDialog(true)}>Add Activity</Button>
                 <Button size='sm' variant='outline' onClick={() => setShowNewNoteDialog(true)}>Add Note</Button>
+                <Button size='sm' variant='outline' onClick={() => setShowNewChecklistDialog(true)}>Add Checklist</Button>
             </Flex>
 
             {isExpanded && (
                 <Flex flexDirection='column' gap='16px'>
                     <Flex flexDirection='column' gap='8px'>
-                        {props.day.activities.map((activity, index) => (
-                            <ActivityCard key={index} activity={activity} />
+                        {props.day.activities.map((activity) => (
+                            <ActivityCard key={activity.id} activity={activity} />
                         ))}
                     </Flex>
 
                     <Divider />
 
                     <Flex flexDirection='column' gap='8px'>
-                        {props.day.notes.map((note, index) => (
-                            <NoteCard key={index} note={note} />
+                        {props.day.notes.map((note) => (
+                            <NoteCard key={note.id} note={note} />
+                        ))}
+                    </Flex>
+
+                    <Divider />
+
+                    <Flex flexDirection='column' gap='8px'>
+                        {props.day.checklists.map((checklist) => (
+                            <ChecklistCard key={checklist.id} checklist={checklist} />
                         ))}
                     </Flex>
                 </Flex>
@@ -71,6 +83,17 @@ export default function DayItem(props: DayItemProps) {
                     }} onClose={() => {
                         setShowNewNoteDialog(false)
                     }}  
+                />
+            )}
+
+            {showNewChecklistDialog && (
+                <NewChecklistDialog
+                    onCreateChecklist={async (checklist) => {
+                        await API.addChecklist(props.day.id, checklist)
+                        setShowNewChecklistDialog(false)
+                    }} onClose={() => {
+                        setShowNewChecklistDialog(false)
+                    }}
                 />
             )}
         </Flex>

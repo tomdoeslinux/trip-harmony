@@ -12,12 +12,12 @@ import lombok.ToString;
 @Table(name = "note")
 public class Note extends BaseEntity {
 
-    @Column(name = "text")
+    @Column(name = "text", nullable = false)
     private String text;
 
     @JsonIgnore
     @ToString.Exclude
     @ManyToOne
-    @JoinColumn(name = "day_id", foreignKey = @ForeignKey(name = "fk_day_id"))
+    @JoinColumn(name = "day_id")
     private Day day;
 }

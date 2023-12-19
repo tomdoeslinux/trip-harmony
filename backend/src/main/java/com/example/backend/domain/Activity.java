@@ -26,15 +26,15 @@ public class Activity extends BaseEntity {
     @Embedded
     private Destination destination;
 
-    @Column(name = "start_time")
+    @Column(name = "start_time", nullable = false)
     private LocalTime startTime;
 
-    @Column(name = "end_time")
+    @Column(name = "end_time", nullable = false)
     private LocalTime endTime;
 
     @JsonIgnore
     @ToString.Exclude
     @ManyToOne
-    @JoinColumn(name = "trip_day_id", foreignKey = @ForeignKey(name = "fk_trip_day_id"))
+    @JoinColumn(name = "day_id")
     private Day day;
 }

@@ -1,17 +1,11 @@
 package com.example.backend.controllers;
 
-import com.example.backend.controllers.dtos.trip.EditTripDTO;
+import com.example.backend.controllers.dtos.UpdateTripDTO;
 import com.example.backend.domain.Trip;
 import com.example.backend.services.TripService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.Map;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/trips")
@@ -32,7 +26,7 @@ public class TripController {
     }
 
     @PatchMapping("/{id}")
-    public void editTrip(@PathVariable Long id, @RequestBody EditTripDTO dto) {
+    public void editTrip(@PathVariable Long id, @RequestBody UpdateTripDTO dto) {
         tripService.editTrip(id, dto);
     }
 

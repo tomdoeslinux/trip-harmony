@@ -52,7 +52,7 @@ export default function TripCardOptions(props: TripCardOptionsProps) {
                     trip={props.trip} 
                     onClose={() => setShowEditTripDialog(false)} 
                     onEditTrip={async (editTrip) => {
-                        await API.editTrip(props.trip.id, editTrip)
+                        await API.updateTrip(props.trip.id, editTrip)
                         setShowEditTripDialog(false)
                     }} 
                 />

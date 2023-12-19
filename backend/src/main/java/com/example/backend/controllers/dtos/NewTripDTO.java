@@ -1,4 +1,4 @@
-package com.example.backend.controllers.dtos.trip;
+package com.example.backend.controllers.dtos;
 
 import com.example.backend.domain.Destination;
 

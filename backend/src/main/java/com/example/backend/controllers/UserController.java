@@ -1,8 +1,8 @@
 package com.example.backend.controllers;
 
-import com.example.backend.controllers.dtos.trip.NewTripDTO;
-import com.example.backend.controllers.dtos.user.RegisterUserDTO;
-import com.example.backend.controllers.dtos.user.LoginUserDTO;
+import com.example.backend.controllers.dtos.NewTripDTO;
+import com.example.backend.controllers.dtos.RegisterUserDTO;
+import com.example.backend.controllers.dtos.LoginUserDTO;
 import com.example.backend.domain.Trip;
 import com.example.backend.domain.User;
 import com.example.backend.services.UserService;
