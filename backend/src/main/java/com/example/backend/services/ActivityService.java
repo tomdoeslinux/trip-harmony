@@ -23,7 +23,7 @@ public class ActivityService {
     }
 
     public void deleteActivityTimes(Long id) {
-        Activity activity = getActivityById(id);
+        Activity activity = activityRepository.findById(id).orElseThrow();
         activity.setStartTime(null);
         activity.setEndTime(null);
 
@@ -31,14 +31,10 @@ public class ActivityService {
     }
 
     public void updateActivityTimes(Long id, UpdateActivityTimesDTO dto) {
-        Activity activity = getActivityById(id);
+        Activity activity = activityRepository.findById(id).orElseThrow();
         activity.setStartTime(dto.startTime());
         activity.setEndTime(dto.endTime());
 
         activityRepository.save(activity);
-    }
-
-    private Activity getActivityById(Long id) {
-        return activityRepository.findById(id).orElseThrow();
     }
 }

@@ -1,5 +1,6 @@
 package com.example.backend;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,41 +16,37 @@ public final class FileUtils {
 
     private FileUtils() { }
 
-    public static String generateUniqueFileName(final MultipartFile multipartFile) {
+    private static final Path DEFAULT_FILE_UPLOAD_PATH =  Path.of(System.getProperty("user.home") + "/server-data");;
+
+    static {
+        if (!Files.exists(DEFAULT_FILE_UPLOAD_PATH)) {
+            try {
+                Files.createDirectory(DEFAULT_FILE_UPLOAD_PATH);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public static String generateUniqueFileName(MultipartFile multipartFile) {
         String ext = StringUtils.getFilenameExtension(multipartFile.getOriginalFilename());
 
         return UUID.randomUUID() + "." + ext;
     }
 
-    public static void createFile(final String fileName, final MultipartFile multipartFile) throws IOException {
-        Path uploadPath = Path.of(System.getProperty("user.home") + "/server-data");
-
-        if (!Files.exists(uploadPath)) {
-            Files.createDirectory(uploadPath);
-        }
-
-        Path filePath = uploadPath.resolve(fileName);
+    public static void createFile(String fileName, MultipartFile multipartFile) throws IOException {
+        Path filePath = DEFAULT_FILE_UPLOAD_PATH.resolve(fileName);
 
         try (InputStream inputStream = multipartFile.getInputStream()) {
             Files.copy(inputStream, filePath);
-        } catch (IOException ex) {
-            throw new IOException("Could not save image file: " + fileName + " to " + uploadPath.getFileName());
         }
     }
 
-    public static void createFile(final String fileName, final byte[] byteArray) throws IOException {
-        Path uploadPath = Path.of(System.getProperty("user.home") + "/server-data");
-
-        if (!Files.exists(uploadPath)) {
-            Files.createDirectory(uploadPath);
-        }
-
-        Path filePath = uploadPath.resolve(fileName);
+    public static void createFile(String fileName, byte[] byteArray) throws IOException {
+        Path filePath = DEFAULT_FILE_UPLOAD_PATH.resolve(fileName);
 
         try (FileOutputStream fileOutputStream = new FileOutputStream(filePath.toString())) {
             fileOutputStream.write(byteArray);
-        } catch (IOException ex) {
-            throw new IOException("Could not save image file: " + fileName + " to " + uploadPath.getFileName());
         }
     }
 }
