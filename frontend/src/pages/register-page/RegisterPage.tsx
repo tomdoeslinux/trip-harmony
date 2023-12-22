@@ -46,7 +46,7 @@ export default function RegisterPage() {
 
                     <Button colorScheme='blue' type='submit'>Register</Button>
                
-                    <Text textAlign='center'>Have an account? <Link href='/login' color='blue'>Login</Link></Text>
+                    <Text textAlign='center'>Have an account? <Link href='/login' style={{ color: 'cornflowerblue' }}>Login</Link></Text>
                 </Flex>
             </Flex>
         </Flex>
