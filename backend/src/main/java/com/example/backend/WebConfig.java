@@ -6,6 +6,9 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 @Component
 public class WebConfig implements WebMvcConfigurer {
 
@@ -16,7 +19,9 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        Path p = Paths.get(System.getProperty("user.home"), "server-data/");
+
         registry.addResourceHandler("/i/**")
-            .addResourceLocations("file:/home/to/server-data/");
+            .addResourceLocations(p.toUri().toString());
     }
 }

@@ -1,4 +1,4 @@
-import { buildUrl } from "src/util"
+import {buildUrl} from "src/util"
 
 export interface User {
     id: number
@@ -105,25 +105,21 @@ export class API {
             },
             body: JSON.stringify(user)
         })
-        const createdUser = await response.json()
-
-        return createdUser
+        return await response.json()
     }
 
     static async getTrips(userId: number): Promise<Trip[]> {
         const response = await fetch(`http://localhost:8080/api/users/${userId}/trips`, {
             method: 'GET'
         })
-        const trips: Trip[] = await response.json()
-        return trips
+        return await response.json()
     }
 
     static async getTripById(id: number): Promise<Trip> {
         const response = await fetch(`http://localhost:8080/api/trips/${id}`, { 
             method: 'GET'
         })
-        const trip: Trip = await response.json()
-        return trip
+        return await response.json()
     }
 
     static async addTrip(userId: number, trip: NewTrip): Promise<Trip> {
@@ -139,9 +135,7 @@ export class API {
             method: 'POST',
             body: formData
         })
-        const createdTrip: Trip = await response.json()
-
-        return createdTrip
+        return await response.json()
     }
 
     static async updateTrip(id: number, updateTrip: UpdateTrip): Promise<void> {
@@ -238,21 +232,17 @@ export class API {
         })
         const data: any[] = await response.json()
 
-        const destinations: Destination[] = data.map((item) => ({
+        return data.map((item) => ({
             name: item.display_name,
             lat: Number(item.lat),
             lon: Number(item.lon)
         }))
-
-        return destinations
     }
 
     static async unsplash_search(query: string): Promise<string[]> {
         const url: URL = buildUrl(`http://localhost:8080/api/unsplash-proxy/search/photos`, { query: query })
        
         const response = await fetch(url)
-        const photos: string[] = await response.json()
-
-        return photos
+        return await response.json()
     }
 }

@@ -28,8 +28,9 @@ export default function TripCardOptions(props: TripCardOptionsProps) {
             <PopoverContent>
                 <PopoverArrow />
                 <PopoverBody padding='0px' display='flex' flexDirection='column'>
-                    <Button 
-                        variant='ghost' 
+                    <Button
+
+                        variant='ghost'
                         leftIcon={<MdEdit />} 
                         onClick={(e) => {
                             e.stopPropagation()

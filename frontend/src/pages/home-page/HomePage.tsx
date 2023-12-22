@@ -75,8 +75,8 @@ export default function HomePage() {
                                 >Add New</Button>
                             </Flex>
 
-                            <Grid 
-                                width='100%' 
+                            <Grid
+                                width='100%'
                                 gridTemplateColumns={{ 
                                     base: 'repeat(1, 1fr)',
                                     sm: 'repeat(2, 1fr)', 
