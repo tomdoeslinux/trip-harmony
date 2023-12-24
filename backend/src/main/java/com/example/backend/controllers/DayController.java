@@ -2,8 +2,12 @@ package com.example.backend.controllers;
 
 import com.example.backend.domain.Activity;
 import com.example.backend.domain.Checklist;
+import com.example.backend.domain.Day;
 import com.example.backend.domain.Note;
-import com.example.backend.services.DayService;
+import com.example.backend.repository.ActivityRepository;
+import com.example.backend.repository.ChecklistRepository;
+import com.example.backend.repository.DayRepository;
+import com.example.backend.repository.NoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,25 +20,43 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/days")
 public class DayController {
 
-    private final DayService dayService;
+    private final DayRepository dayRepository;
+
+    private final ActivityRepository activityRepository;
+
+    private final NoteRepository noteRepository;
+
+    private final ChecklistRepository checklistRepository;
 
     @Autowired
-    public DayController(DayService dayService) {
-        this.dayService = dayService;
+    public DayController(DayRepository dayRepository, ActivityRepository activityRepository, NoteRepository noteRepository, ChecklistRepository checklistRepository) {
+        this.dayRepository = dayRepository;
+        this.activityRepository = activityRepository;
+        this.noteRepository = noteRepository;
+        this.checklistRepository = checklistRepository;
     }
 
     @PostMapping("/{id}/activities")
     public ResponseEntity<Activity> addActivity(@PathVariable Long id, @RequestBody Activity activity) {
-        return ResponseEntity.ok(dayService.addActivity(id, activity));
+        Day day = dayRepository.findById(id).orElseThrow();
+        activity.setDay(day);
+
+        return ResponseEntity.ok(activityRepository.save(activity));
     }
 
     @PostMapping("/{id}/notes")
     public ResponseEntity<Note> addNote(@PathVariable Long id, @RequestBody Note note) {
-        return ResponseEntity.ok(dayService.addNote(id, note));
+        Day day = dayRepository.findById(id).orElseThrow();
+        note.setDay(day);
+
+        return ResponseEntity.ok(noteRepository.save(note));
     }
 
     @PostMapping("/{id}/checklists")
     public ResponseEntity<Checklist> addChecklist(@PathVariable Long id, @RequestBody Checklist checklist) {
-        return ResponseEntity.ok(dayService.addChecklist(id, checklist));
+        Day day = dayRepository.findById(id).orElseThrow();
+        checklist.setDay(day);
+
+        return ResponseEntity.ok(checklistRepository.save(checklist));
     }
 }
