@@ -35,7 +35,7 @@ public class TripController {
     }
 
     @PatchMapping("/{id}")
-    public void editTrip(@PathVariable Long id, @RequestBody UpdateTripDTO dto) {
+    public void updateTrip(@PathVariable Long id, @RequestBody UpdateTripDTO dto) {
         Trip trip = tripRepository.findById(id).orElseThrow();
 
         try {

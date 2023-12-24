@@ -37,4 +37,9 @@ public class ChecklistItemController {
 
         return ResponseEntity.ok().build();
     }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        checklistItemRepository.deleteById(id);
+    }
 }
