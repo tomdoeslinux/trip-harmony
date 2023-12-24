@@ -35,7 +35,7 @@ const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(({ suggesti
         return () => {
             document.removeEventListener('mousedown', documentMouseDownHandler)
         }
-    }, [JSON.stringify(suggestions)])
+    }, [suggestions.length])
 
     return (
         <Flex flexDirection='column' width='100%' gap='8px'>

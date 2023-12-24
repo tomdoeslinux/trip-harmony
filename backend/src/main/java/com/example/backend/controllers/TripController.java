@@ -1,37 +1,55 @@
 package com.example.backend.controllers;
 
 import com.example.backend.controllers.dtos.UpdateTripDTO;
+import com.example.backend.domain.Day;
 import com.example.backend.domain.Trip;
-import com.example.backend.services.TripService;
+import com.example.backend.repository.TripRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/trips")
 public class TripController {
 
-    private final TripService tripService;
+    private final TripRepository tripRepository;
+    private final ObjectMapper objectMapper;
 
     @Autowired
-    public TripController(TripService tripService) {
-        this.tripService = tripService;
+    public TripController(TripRepository tripRepository, ObjectMapper objectMapper) {
+        this.tripRepository = tripRepository;
+        this.objectMapper = objectMapper;
     }
 
     @GetMapping( "/{id}")
     public ResponseEntity<Trip> getTripById(@PathVariable Long id) {
-        Trip trip = tripService.getTripById(id);
+        return ResponseEntity.ok(tripRepository.findById(id).orElseThrow());
+    }
 
-        return ResponseEntity.ok(trip);
+    @GetMapping("/{id}/days")
+    public ResponseEntity<List<Day>> getTripDays(@PathVariable Long id) {
+        return ResponseEntity.ok(tripRepository.findById(id).orElseThrow().getDays());
     }
 
     @PatchMapping("/{id}")
     public void editTrip(@PathVariable Long id, @RequestBody UpdateTripDTO dto) {
-        tripService.editTrip(id, dto);
+        Trip trip = tripRepository.findById(id).orElseThrow();
+
+        try {
+            objectMapper.updateValue(trip, dto);
+        } catch (Exception ex) {
+            throw new RuntimeException();
+        }
+
+        trip.generateDays();
+        tripRepository.save(trip);
     }
 
     @DeleteMapping("/{id}")
     public void deleteTrip(@PathVariable Long id) {
-        tripService.deleteTrip(id);
+        tripRepository.deleteById(id);
     }
 }

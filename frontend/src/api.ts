@@ -79,7 +79,6 @@ export class API {
         })
 
         const loggedInUser: User = await response.json()
-        API.login(loggedInUser)
 
         localStorage.setItem(API.LOGGED_IN_USER_KEY, JSON.stringify(loggedInUser))
     }
