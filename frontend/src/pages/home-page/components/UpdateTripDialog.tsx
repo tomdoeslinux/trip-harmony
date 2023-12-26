@@ -1,22 +1,35 @@
-import { FormControl, FormLabel, Input } from "@chakra-ui/react";
-import { useForm } from "react-hook-form";
-import { UpdateTrip, NewTrip, Trip } from "src/api";
+import {FormControl, FormLabel, Input} from "@chakra-ui/react";
+import {useForm} from "react-hook-form";
+import {API, Trip, UpdateTrip} from "src/api";
 import DestinationInput from "src/ui/DestinationInput";
 import SimpleFormModal from "src/ui/SimpleFormModal";
+import {useMutation, useQueryClient} from "@tanstack/react-query";
 
-interface EditTripDialogProps {
+interface UpdateTripDialogProps {
     trip: Trip
     onClose: () => void
-    onEditTrip: (trip: UpdateTrip) => void
 }
 
-export default function EditTripDialog(props: EditTripDialogProps) {
+export default function UpdateTripDialog(props: UpdateTripDialogProps) {
     const { handleSubmit, setValue, register } = useForm<UpdateTrip>({
         defaultValues: props.trip
     })
+    const queryClient = useQueryClient()
+
+    const updateTripMutation = useMutation({
+        mutationFn: (trip: UpdateTrip) => API.updateTrip(props.trip.id, trip),
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: ['trips'] })
+            props.onClose()
+        }
+    })
+
+    function submitHandler(trip: UpdateTrip) {
+        updateTripMutation.mutate(trip)
+    }
 
     return (
-        <SimpleFormModal header='Edit Trip' onClose={props.onClose} onFormSubmit={handleSubmit(props.onEditTrip)}>
+        <SimpleFormModal header='Edit Trip' onClose={props.onClose} onFormSubmit={handleSubmit(submitHandler)}>
             <FormControl>
                 <FormLabel>Name</FormLabel>
                 <Input {...register('name')} />

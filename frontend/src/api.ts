@@ -64,13 +64,23 @@ export interface LoginParam {
     password: string
 }
 
+async function strictFetch(input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
+    const response = await fetch(input, init)
+
+    if (!response.ok) {
+        throw response
+    }
+
+    return response
+}
+
 export class API {
     private constructor() { }
 
     private static readonly LOGGED_IN_USER_KEY = 'logged_in_user'
 
     static async login(loginParam: LoginParam) {
-        const response = await fetch('http://localhost:8080/api/users/login', {
+        const response = await strictFetch('http://localhost:8080/api/users/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -97,28 +107,28 @@ export class API {
     }
 
     static async createUser(user: User): Promise<User> {
-        const response = await fetch('http://localhost:8080/api/users', {
+        const response = await strictFetch('http://localhost:8080/api/users', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(user)
         })
-        return await response.json()
+        return response.json()
     }
 
     static async getTrips(userId: number): Promise<Trip[]> {
-        const response = await fetch(`http://localhost:8080/api/users/${userId}/trips`, {
+        const response = await strictFetch(`http://localhost:8080/api/users/${userId}/trips`, {
             method: 'GET'
         })
-        return await response.json()
+        return response.json()
     }
 
     static async getTripById(id: number): Promise<Trip> {
-        const response = await fetch(`http://localhost:8080/api/trips/${id}`, { 
+        const response = await strictFetch(`http://localhost:8080/api/trips/${id}`, {
             method: 'GET'
         })
-        return await response.json()
+        return response.json()
     }
 
     static async addTrip(userId: number, trip: NewTrip): Promise<Trip> {
@@ -130,16 +140,16 @@ export class API {
         delete trip.file
         formData.append('trip', new Blob([JSON.stringify(trip)], { type: 'application/json' }))
 
-        const response = await fetch(`http://localhost:8080/api/users/${userId}/trips`, {
+        const response = await strictFetch(`http://localhost:8080/api/users/${userId}/trips`, {
             method: 'POST',
             body: formData
         })
-        return await response.json()
+        return response.json()
     }
 
     static async updateTrip(id: number, updateTrip: UpdateTrip): Promise<void> {
-        await fetch(`http://localhost:8080/api/trips/${id}`, {
-            method: 'PATCH', 
+        await strictFetch(`http://localhost:8080/api/trips/${id}`, {
+            method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -148,13 +158,13 @@ export class API {
     }
 
     static async deleteTrip(id: number): Promise<void> {
-        await fetch(`http://localhost:8080/api/trips/${id}`, {
+        await strictFetch(`http://localhost:8080/api/trips/${id}`, {
             method: 'DELETE'
         })
     }
 
     static async addActivity(dayId: number, activity: Activity): Promise<void> {
-        await fetch(`http://localhost:8080/api/days/${dayId}/activities`, {
+        await strictFetch(`http://localhost:8080/api/days/${dayId}/activities`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -164,13 +174,13 @@ export class API {
     }
 
     static async deleteActivity(id: number): Promise<void> {
-        await fetch(`http://localhost:8080/api/activities/${id}`, {
+        await strictFetch(`http://localhost:8080/api/activities/${id}`, {
             method: 'DELETE'
         })
     }
 
     static async updateActivityTimes(id: number, newStartTime: string, newEndTime: string): Promise<void> {
-        await fetch(`http://localhost:8080/api/activities/${id}/times`, {
+        await strictFetch(`http://localhost:8080/api/activities/${id}/times`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -180,7 +190,7 @@ export class API {
     }
 
     static async addNote(dayId: number, note: Note): Promise<void> {
-        await fetch(`http://localhost:8080/api/days/${dayId}/notes`, {
+        await strictFetch(`http://localhost:8080/api/days/${dayId}/notes`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -190,7 +200,7 @@ export class API {
     }
 
     static async addChecklist(dayId: number, checklist: Checklist): Promise<void> {
-        await fetch(`http://localhost:8080/api/days/${dayId}/checklists`, {
+        await strictFetch(`http://localhost:8080/api/days/${dayId}/checklists`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -200,23 +210,23 @@ export class API {
     }
 
     static async addChecklistItem(checklistId: number, checklistItem: ChecklistItem): Promise<void> {
-        await fetch(`http://localhost:8080/api/checklists/${checklistId}/items`, {
+        await strictFetch(`http://localhost:8080/api/checklists/${checklistId}/items`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(checklistItem)
-        }) 
+        })
     }
 
     static async updateChecklistItem(id: number, patchObject: Partial<ChecklistItem>): Promise<void> {
-        await fetch(`http://localhost:8080/api/checklist-items/${id}`, {
+        await strictFetch(`http://localhost:8080/api/checklist-items/${id}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(patchObject)
-        }) 
+        })
     }
 
     static getImgPath(fileName: string): string {
@@ -226,8 +236,8 @@ export class API {
     static async nomatim_getSuggestedDestinations(searchInput: string): Promise<Destination[]> {
         const url: URL = buildUrl('https://nominatim.openstreetmap.org/search', { q: searchInput, format: 'json' })
 
-        const response = await fetch(url, { 
-            headers: { 'User-Agent': 'todoescode@gmail.com' } 
+        const response = await strictFetch(url, {
+            headers: { 'User-Agent': 'todoescode@gmail.com' }
         })
         const data: any[] = await response.json()
 
@@ -241,7 +251,7 @@ export class API {
     static async unsplash_search(query: string): Promise<string[]> {
         const url: URL = buildUrl(`http://localhost:8080/api/unsplash-proxy/search/photos`, { query: query })
        
-        const response = await fetch(url)
-        return await response.json()
+        const response = await strictFetch(url)
+        return response.json()
     }
 }

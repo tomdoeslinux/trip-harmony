@@ -1,42 +1,45 @@
-import { Button, Text, Flex, Grid, Heading } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import { MdAdd } from "react-icons/md";
-import { API, NewTrip, Trip, User } from "src/api";
+import {Button, Flex, Grid, Heading} from "@chakra-ui/react";
+import {useMemo, useState} from "react";
+import {MdAdd} from "react-icons/md";
+import {API, NewTrip, User} from "src/api";
 import Header from "src/pages/home-page/components/Header";
 import NewTripDialog from "src/pages/home-page/components/NewTripDialog";
 import TripCard from "src/pages/home-page/components/TripCard";
-import { useLocation } from "wouter";
+import {useLocation} from "wouter";
+import {useMutation, useQuery} from "@tanstack/react-query";
 
 export const HEADER_HEIGHT = '70px'
 export const PAGE_WIDTH = '1280px'
 
 export default function HomePage() {
     const [showNewTripDialog, setShowNewTripDialog] = useState(false)
-    const [_, setLocation] = useLocation()
-    const [user, setUser] = useState<User | null>(null)
-    const [trips, setTrips] = useState<Trip[]>([])
+    const [, setLocation] = useLocation()
 
-    useEffect(() => {
-        async function init() {
-            if (API.isLoggedIn()) {
-                const loggedInUser = API.getLoggedInUser()
-                setUser(loggedInUser)
-
-                const trips: Trip[] = await API.getTrips(loggedInUser.id);
-                setTrips(trips)
-            } else {
-                setLocation('/register')
-            }
+    // We can use `useMemo` as there are no async operations performed in factory
+    const user: User | null = useMemo(() => {
+        if (API.isLoggedIn()) {
+            return API.getLoggedInUser()
+        } else {
+            setLocation('/register')
+            return null
         }
-
-        init()
     }, [])
+
+    const { data: trips } = useQuery({
+        queryKey: ['trips'],
+        queryFn: () => API.getTrips(user!.id),
+        enabled: user !== null
+    })
+
+    const createTripMutation = useMutation({
+        mutationFn: (newTrip: NewTrip) => API.addTrip(user!.id, newTrip),
+        onSuccess: (createdTrip) => setLocation(`/trips/${createdTrip.id}`)
+    })
 
     async function createTrip(trip: NewTrip): Promise<void> {
         if (user) {
             setShowNewTripDialog(false)
-            const createdTrip: Trip = await API.addTrip(user.id, trip)
-            setLocation(`/trips/${createdTrip.id}`)
+            createTripMutation.mutate(trip)
         }
     }
 
@@ -75,24 +78,26 @@ export default function HomePage() {
                                 >Add New</Button>
                             </Flex>
 
-                            <Grid
-                                width='100%'
-                                gridTemplateColumns={{ 
-                                    base: 'repeat(1, 1fr)',
-                                    sm: 'repeat(2, 1fr)', 
-                                    md: 'repeat(3, 1fr)', 
-                                    lg: 'repeat(4, 1fr)' 
-                                }} 
-                                gap='8px'
-                            >
-                                {trips.map((trip) => (
-                                    <TripCard
-                                        trip={trip}
-                                        key={trip.id}
-                                        onClick={(tripId) => setLocation(`/trips/${tripId}`)}
-                                    />
-                                ))}
-                            </Grid>
+                            {trips && (
+                                <Grid
+                                    width='100%'
+                                    gridTemplateColumns={{
+                                        base: 'repeat(1, 1fr)',
+                                        sm: 'repeat(2, 1fr)',
+                                        md: 'repeat(3, 1fr)',
+                                        lg: 'repeat(4, 1fr)'
+                                    }}
+                                    gap='8px'
+                                >
+                                    {trips.map((trip) => (
+                                        <TripCard
+                                            trip={trip}
+                                            key={trip.id}
+                                            onClick={(tripId) => setLocation(`/trips/${tripId}`)}
+                                        />
+                                    ))}
+                                </Grid>
+                            )}
                         </Flex>
                     </Flex>
 

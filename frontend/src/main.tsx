@@ -8,6 +8,7 @@ import TripPage from 'src/pages/trip-page/TripPage.tsx'
 import RegisterPage from 'src/pages/register-page/RegisterPage.tsx'
 import LoginPage from 'src/pages/login-page/LoginPage.tsx'
 import { cardAnatomy } from '@chakra-ui/anatomy'
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 const { definePartsStyle, defineMultiStyleConfig } =
     createMultiStyleConfigHelpers(cardAnatomy.keys)
     
@@ -57,8 +58,10 @@ function Router() {
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
-        <ChakraProvider theme={theme}>
-            <Router />
-        </ChakraProvider>
+        <QueryClientProvider client={new QueryClient()}>
+            <ChakraProvider theme={theme}>
+                <Router />
+            </ChakraProvider>
+        </QueryClientProvider>
     </React.StrictMode>
 )

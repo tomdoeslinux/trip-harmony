@@ -38,7 +38,7 @@ const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(({ suggesti
     }, [suggestions.length])
 
     return (
-        <Flex flexDirection='column' width='100%' gap='8px'>
+        <Flex flexDirection='column' width='100%'>
             <InputGroup>
                 <Input {...props} ref={inputRef} />
 
@@ -51,7 +51,8 @@ const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(({ suggesti
 
             {suggestions.length > 0 && suggestionsVisible && (
                 <Flex maxWidth='100%' position='relative' zIndex='999' ref={suggestionsRef}>
-                    <Flex 
+                    <Flex
+                        marginTop='4px'
                         width='100%'
                         flexDirection='column' 
                         border='1px solid'
